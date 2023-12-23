@@ -24,6 +24,8 @@ public class User {
     @Getter @Setter
     private String lastName;
     @Getter @Setter
+    private String dni;
+    @Getter @Setter
     private String phone;
     @Getter @Setter
     private String address;
@@ -33,8 +35,6 @@ public class User {
     private String city;
     @Getter @Setter
     private String country;
-    @Getter @Setter
-    private String coverLetter;
     @Lob
     @Getter @Setter
     private byte[] profileImage;

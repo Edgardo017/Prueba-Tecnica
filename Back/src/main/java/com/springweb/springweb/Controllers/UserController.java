@@ -17,9 +17,10 @@ public class UserController {
     @Autowired
     private JWTUtil jwtuil;
 
-    @RequestMapping(value = "api/usuarios/register", method = RequestMethod.POST)
+    @RequestMapping(value = "api/register", method = RequestMethod.POST)
     public String addUser(@RequestBody User user){
-       return UserDao.addUser(user);
+        System.out.println("register");
+        return UserDao.addUser(user);
     }
 
 
@@ -29,7 +30,6 @@ public class UserController {
         if (newUser != null){
             return jwtuil.create(String.valueOf(newUser.getId()), newUser.getUsername());
         }
-        System.out.println("login");
         return "error 401";
     }
 

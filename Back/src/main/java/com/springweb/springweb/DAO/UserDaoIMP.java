@@ -17,7 +17,7 @@ public class UserDaoIMP implements UserDao{
 
     @Override
     public String addUser(User user) {
-        String error = null;
+        String error = "error 402";
         try {
             Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
             user.setPassword(argon2.hash(1, 1024,1, user.getPassword()));
