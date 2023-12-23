@@ -1,1 +1,142 @@
-<p>register works!</p>
+<div class="container-fluid d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title text-center mb-4">Registro</h2>
+              <form [formGroup]="registrationForm" (ngSubmit)="requestRegistration()">
+                <div class="form-row">
+                  <div class="form-group col-md-12">
+                    <label for="add.username">Nombre de Usuario</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      </div>
+                      <input type="text" class="form-control" id="add.username" formControlName="username" placeholder="Ingresa tu nombre de usuario" required>
+                    </div>
+                    <div *ngIf="username.invalid && (username.dirty || username.touched)" class="text-danger">
+                      <div *ngIf="username.errors?.['required']">
+                        El nombre de usuario es obligatorio.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="add.password">Contraseña</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                      </div>
+                      <input type="password" class="form-control" id="add.password" formControlName="password" placeholder="Ingresa tu contraseña" pattern="(?=.*\d)(?=.*[A-Z])(?=.*\W).{8,}" title="La contraseña debe contener al menos 8 caracteres, una mayúscula, un número y un carácter especial" required>
+                      <div class="input-group-append">
+                        <span class="input-group-text">
+                          <i class="fas fa-eye" (click)="togglePassword('add.password')"></i>
+                        </span>
+                      </div>
+                    </div>
+                    <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
+                      <div *ngIf="password.errors?.['required']">
+                        La contraseña es obligatoria.
+                      </div>
+                      <div *ngIf="password.errors?.['pattern']">
+                        La contraseña debe contener al menos 8 caracteres, una mayúscula, un número y un carácter especial.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="add.repassword">Confirmar Contraseña</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                      </div>
+                      <input type="password" class="form-control" id="add.repassword" formControlName="repassword" placeholder="Reingresa tu contraseña" required>
+                      <div class="input-group-append">
+                        <span class="input-group-text">
+                          <i class="fas fa-eye" (click)="togglePassword('add.repassword')"></i>
+                        </span>
+                      </div>
+                    </div>
+                    <div *ngIf="repassword.invalid && (repassword.dirty || repassword.touched)" class="text-danger">
+                      <div *ngIf="repassword.errors?.['required']">
+                        Confirmar la contraseña es obligatorio.
+                      </div>
+                      <div *ngIf="registrationForm.hasError('passwordMismatch')">
+                        Las contraseñas no coinciden.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="add.name">Nombre</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      </div>
+                      <input type="text" class="form-control" id="add.name" formControlName="name" placeholder="Ingresa tu nombre" required>
+                    </div>
+                    <div *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+                      <div *ngIf="name.errors?.['required']">
+                        El nombre es obligatorio.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="add.lastname">Apellido</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      </div>
+                      <input type="text" class="form-control" id="add.lastname" formControlName="lastname" placeholder="Ingresa tu apellido" required>
+                    </div>
+                    <div *ngIf="lastname.invalid && (lastname.dirty || lastname.touched)" class="text-danger">
+                      <div *ngIf="lastname.errors?.['required']">
+                        El apellido es obligatorio.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="add.dni">DNI</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                      </div>
+                      <input type="text" class="form-control" id="add.dni" formControlName="dni" placeholder="Ingresa tu DNI" pattern="[0-9]{9,}" title="El DNI debe contener al menos 9 dígitos" required>
+                    </div>
+                    <div *ngIf="dni.invalid && (dni.dirty || dni.touched)" class="text-danger">
+                      <div *ngIf="dni.errors?.['required']">
+                        El DNI es obligatorio.
+                      </div>
+                      <div *ngIf="dni.errors?.['pattern']">
+                        El DNI debe contener al menos 9 dígitos numéricos.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="add.telf">Teléfono</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                      </div>
+                      <input type="text" class="form-control" id="add.telf" formControlName="telf" placeholder="Ingresa tu teléfono" pattern="[0-9]{9,}" title="El teléfono debe contener al menos 9 dígitos" required>
+                    </div>
+                    <div *ngIf="telf.invalid && (telf.dirty || telf.touched)" class="text-danger">
+                      <div *ngIf="telf.errors?.['required']">
+                        El teléfono es obligatorio.
+                      </div>
+                      <div *ngIf="telf.errors?.['pattern']">
+                        El teléfono debe contener al menos 9 dígitos numéricos.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary btn-block mt-3">Registrarse</button>
+                  <a class="btn btn-secondary btn-block" routerLink="/login">Atras</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
