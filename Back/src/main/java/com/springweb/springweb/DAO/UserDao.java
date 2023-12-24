@@ -8,4 +8,5 @@ public interface UserDao {
 
     String addUser(User user);
     User loginUser(User user);
+    boolean updateUser(User user);
 }

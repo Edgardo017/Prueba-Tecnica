@@ -12,7 +12,6 @@ export class RegisterService {
   constructor(private http: HttpClient) { }
 
   requestLogin(credentials: User): Observable<any> {
-    console.log("ola")
     return this.http.post("http://localhost:8080/api/register", credentials, { responseType: 'text' }).pipe(
       tap((response) => {
         if (response === "error 401") 

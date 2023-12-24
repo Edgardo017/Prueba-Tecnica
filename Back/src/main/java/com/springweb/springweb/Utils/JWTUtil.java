@@ -1,9 +1,6 @@
 package com.springweb.springweb.Utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -91,4 +89,21 @@ public class JWTUtil {
 
         return claims.getId();
     }
+
+    public boolean isTokenExpired(String jwt) {
+        try {
+            Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(key)).parseClaimsJws(jwt).getBody();
+            Date expiration = claims.getExpiration();
+
+            return expiration.before(new Date()); // Devuelve true si la fecha de expiración es anterior a la fecha actual
+        } catch (ExpiredJwtException ex) {
+            // Excepción lanzada si el token ya ha expirado
+            return true;
+        } catch (JwtException ex) {
+            // Manejar otras excepciones relacionadas con el token JWT (puedes registrarlas o manejarlas según sea necesario)
+            log.error("Error al analizar el token JWT: {}", ex.getMessage());
+            return true; // Puedes modificar este valor dependiendo de cómo quieras manejar los errores de JWT
+        }
+    }
+
 }

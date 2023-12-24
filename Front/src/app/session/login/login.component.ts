@@ -38,6 +38,7 @@ export class LoginComponent implements OnInit {
       this.loginService.requestLogin(this.loginForm.value as User).subscribe({
         next: (userData) => {
           alert("Sesion Iniciada");
+
           this.loginForm.reset();
           this.router.navigate(['/crearCv']);
           return;
@@ -62,5 +63,14 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  togglePassword(fieldId: string) {
+    const field = document.getElementById(fieldId) as HTMLInputElement;
+    if (field.type === 'password') {
+      field.type = 'text';
+    } else {
+      field.type = 'password';
+    }
   }
 }

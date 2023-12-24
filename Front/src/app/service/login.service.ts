@@ -12,14 +12,13 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   requestLogin(credentials: User): Observable<any> {
-    console.log("ola")
     return this.http.post("http://localhost:8080/api/login", credentials, { responseType: 'text' }).pipe(
       tap((response) => {
         if (response === "error 401") {
           throw new Error('Error 401: Nombre de usuario o contraseña incorrecto');
         } else {
           console.log("token" + response);
-          sessionStorage.setItem("token", response);
+          localStorage.setItem("token", response);
         }
       }),
       catchError(this.handleError)

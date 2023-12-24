@@ -36,9 +36,9 @@ public class User {
     @Getter @Setter
     private String country;
     @Lob
-    @Getter @Setter
+    @Getter @Setter @Column(columnDefinition = "LONGBLOB")
     private byte[] profileImage;
     @Lob
-    @Getter @Setter
+    @Getter @Setter @Column(columnDefinition = "LONGBLOB")
     private byte[] bannerImage;
 }

@@ -1,0 +1,17 @@
+.header {
+    position: relative;
+}
+
+.header-image {
+    width: 100%;
+}
+
+.header-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    width: 100%;
+}

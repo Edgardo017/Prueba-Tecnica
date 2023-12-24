@@ -22,18 +22,20 @@ public class CvController {
     private JWTUtil jwtuil;
     @Value("${security.jwt.secret}")
     private String jwtSecret;
+    @RequestMapping(value = "/api/actualizarCv", method = RequestMethod.POST)
+    public String actualizarCV(@RequestHeader("Authorization") String token, @RequestBody User user) {
 
-    @RequestMapping(value = "/api/crearCv", method = RequestMethod.POST)
-    public boolean validarToken(@RequestBody String token) {
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(jwtSecret)
-                    .parseClaimsJws(token)
-                    .getBody();
+        if ( jwtuil.isTokenExpired(token) )
+            System.out.println("token expirado");
+        else
+            System.out.println("token no expirado");
 
-            return claims.getExpiration().after(new Date());
-        } catch (Exception e) {
-            return false;
-        }
+        String tokenUserId = jwtuil.getKey(token);
+        user.setId( Long.parseLong(tokenUserId));
+        System.out.println("curriculum : "+tokenUserId);
+        if (UserDao.updateUser(user))
+            return "curriculum actualizado jeje";
+        return "error 403";
     }
+
 }
