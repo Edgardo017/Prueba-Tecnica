@@ -37,8 +37,9 @@ export class LoginComponent implements OnInit {
       this.error = '';
       this.loginService.requestLogin(this.loginForm.value as User).subscribe({
         next: (userData) => {
-          alert("Login Exitoso");
+          alert("Sesion Iniciada");
           this.loginForm.reset();
+          this.router.navigate(['/crearCv']);
           return;
         },
         error: (errorData) => {

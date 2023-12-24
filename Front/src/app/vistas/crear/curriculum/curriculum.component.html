@@ -1,0 +1,225 @@
+<div class="container" style="width: 1100px; margin: 0 auto">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Curriculum Vitae</h3>
+                    </div>
+                    <form>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnGZWTF4dIu8uBZzgjwWRKJJ4DisphDHEwT2KhLNxBAA&amp;s" alt="Imagen del Producto" style="max-width: 100%; height: auto;" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cambiarImagen">Cambiar Foto</label>
+                                            <input type="file" id="cambiarImagen" name="cambiarImagen" class="form-control-file">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title w-100 font-weight-bold font-size-12">Datos Personales</h5>
+                                        <div *ngFor="let item of listaInformacionPersonal; let i = index" class="form-group">
+                                            <label for="nombre">{{ item.title }}</label>
+                                            <div class="form-group input-group">
+                                                <input type="text" class="form-control" [id]="item.item.toLowerCase()" [name]="item.item.toLowerCase()" [placeholder]="item.item" [value]="item.value" required>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-danger" type="button" (click)="eliminarInformacionPersonal(i)"><i class="bi bi-trash"></i></button>
+                                                    <button class="btn btn-outline-primary" type="button"><i class="bi bi-pencil"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-md-right mt-3 mb-3">
+                                            <button type="button" class="btn" data-toggle="modal" data-target="#addPersonalInformation" style="background-color: #434444; color: white;">Agregar Datos Personales</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+       
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card-body">
+                                       <div class="card-header text-center">
+                                        <h5 class="card-title w-100 font-weight-bold font-size-12">Experiencia Laboral</h5>
+                                       </div>
+                                       <br>
+ 
+                                       <div *ngFor="let item of listaExperienciaLaborales; let i = index" class="form-group">
+                                        <div class="input-group-append justify-content-end">
+                                           <button class="btn btn-outline-danger mr-1" type="button"><i class="bi bi-trash"></i></button>
+                                           <button class="btn btn-outline-primary" type="button"><i class="bi bi-pencil"></i></button>
+                                       </div>
+                                        <div style="text-align: center;">
+                                            <h5>{{ item.company }}, {{ item.country }}</h5>
+                                            <h6 style="font-style: italic;">{{ item.position }} de {{ item.startDate }} hasta {{ item.endDate }}</h6>
+                                            <div style="text-align: left;">
+                                              <label style="font-weight: bold; font-size: 20px;">Funciones</label>
+                                              <textarea id="texto" readonly style="border: none; width: 100%; resize: none; text-align: left;" rows="5" onfocus="this.blur()">{{ item.description }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    
+ 
+                                        <div class="text-md-right mt-3 mb-3">
+                                            <button type="button" class="btn" data-toggle="modal" data-target="#addWorkExperience" style="background-color: #434444; color: white;">Agregar Experiencia Laboral</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+ 
+                    <div class="card-footer">
+                        <input type="hidden" name="action" value="actualizar_perfil">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+ 
+ 
+                    <div class="modal fade" id="addPersonalInformation" tabindex="-1" role="dialog" aria-labelledby="addPersonalInformationLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addPersonalInformationLabel">Añadir Información Personal</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form [formGroup]="addInformationForm" (ngSubmit)="addPersonalInformation()">
+                                    <div class="modal-body">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label for="gridlist">Selecciona un item:</label>
+                                                    <select class="form-control" id="personalInformationGridList" formControlName="gridlist" required>
+                                                        <option value="firstName">Nombres</option>
+                                                        <option value="lastName">Apellidos</option>
+                                                        <option value="dni">Dni</option>
+                                                        <option value="email">Email</option>
+                                                        <option value="phone">Telefono</option>
+                                                        <option value="address">Direccion</option>
+                                                        <option value="district">Distrito</option>
+                                                        <option value="city">Ciudad</option>
+                                                        <option value="country">Pais</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label for="valor">Valor:</label>
+                                                    <input type="text" class="form-control" id="personalInformationValue" formControlName="value" placeholder="Ingresa el valor" required>
+                                                    <div *ngIf="value.invalid && (value.dirty || value.touched)" class="text-danger">
+                                                        <div *ngIf="value.errors?.['required']">
+                                                            Necesitas rellenar este campo
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addPersonalInformationClose">Cerrar</button>
+                                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="modal fade" id="addWorkExperience" tabindex="-1" role="dialog" aria-labelledby="addWorkExperienceLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addWorkExperienceLabel">Añadir Experiencia Laboral</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form [formGroup]="addWorkExperienceForm" (ngSubmit)="addWorkExperience()">
+                                    <div class="modal-body">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="nombreEmpresa">Nombre de la Empresa:</label>
+                                                    <input type="text" class="form-control" id="nombreEmpresa" formControlName="companyName" placeholder="Nombre de la Empresa" required>
+                                                    <div *ngIf="companyName.invalid && (value.dirty || companyName.touched)" class="text-danger">
+                                                        <div *ngIf="companyName.errors?.['required']">
+                                                            Necesitas rellenar este campo
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="pais">País:</label>
+                                                    <input type="text" class="form-control" id="pais" formControlName="country" placeholder="País" required>
+                                                    <div *ngIf="country.invalid && (value.dirty || country.touched)" class="text-danger">
+                                                        <div *ngIf="country.errors?.['required']">
+                                                            Necesitas rellenar este campo
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label for="cargo">Cargo:</label>
+                                                    <input type="text" class="form-control" id="cargo" formControlName="position" placeholder="Cargo" required>
+                                                    <div *ngIf="position.invalid && (value.dirty || position.touched)" class="text-danger">
+                                                        <div *ngIf="position.errors?.['required']">
+                                                            Necesitas rellenar este campo
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="fechaInicio">Fecha de Inicio:</label>
+                                                    <input type="date" class="form-control" id="fechaInicio" formControlName="startDate" required>
+                                                    <div *ngIf="startDate.invalid && (value.dirty || startDate.touched)" class="text-danger">
+                                                        <div *ngIf="startDate.errors?.['required']">
+                                                            Necesitas rellenar este campo
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="fechaFin">Fecha de Fin:</label>
+                                                    <input type="date" class="form-control" id="fechaFin" formControlName="endDate">
+                                                    <div *ngIf="endDate.invalid && (value.dirty || endDate.touched)" class="text-danger">
+                                                        <div *ngIf="endDate.errors?.['required']">
+                                                            Necesitas rellenar este campo
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label for="funciones">Funciones Realizadas:</label>
+                                                    <textarea class="form-control" id="funciones" formControlName="jobDescription" rows="5" placeholder="Funciones Realizadas" required></textarea>
+                                                    <div *ngIf="jobDescription.invalid && (value.dirty || jobDescription.touched)" class="text-danger">
+                                                        <div *ngIf="jobDescription.errors?.['required']">
+                                                            Necesitas rellenar este campo
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id= "addWorkExperienceClose">Cerrar</button>
+                                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+ 
