@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Importa el servicio de modales de Bootstrap
 import { User } from '../../../Interfaces/User';
 import { WorkExperience  } from '../../../Interfaces/WorkExperience';
+import { Certifications  } from '../../../Interfaces/Certifications';
+
 import { CreateCvService } from '../../../service/create-cv.service';
 
 @Component({
@@ -23,10 +25,46 @@ export class CurriculumComponent implements OnInit {
       alert("Necesitas iniciar sesión");
       // Redireccionar a la página /login si no existe el token
       this.router.navigate(['/login']);
+      return;
+    }
+  
+    this.createCvService.requestDataCV().subscribe({
+      next: (userData) => {
+        // Verifica si hay datos de usuario y experiencias laborales
+        if (userData && userData.user && userData.workExperience) {
+          this.Cliente = userData.user;
+          this.Experiencias = userData.workExperience;
+          
+          // Cargar las imágenes si están disponibles
+          this.loadPerfilImage();
+          this.loadBannerImage();
+        } else {
+          // Manejar el caso donde no se recibe un currículum válido
+          console.error('El currículum recibido es inválido');
+          // Podrías redirigir a una página de error específica si es necesario
+        }
+      },
+      error: (errorData) => {
+        alert("Sesión expirada");
+        localStorage.removeItem('token');
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+  
+  loadPerfilImage() {
+    const perfilImageElement = document.getElementById('perfilImage') as HTMLImageElement;
+    if (perfilImageElement && this.Cliente.profileImage) {
+      perfilImageElement.src = `http://localhost:8080/${this.Cliente.profileImage}`;
     }
   }
   
-  
+  loadBannerImage() {
+    const bannerImageElement = document.getElementById('bannerImage') as HTMLImageElement;
+    if (bannerImageElement && this.Cliente.bannerImage) {
+      bannerImageElement.src = `http://localhost:8080/${this.Cliente.bannerImage}`;
+    }
+  }
 
   modalAddInfoError: boolean = false;
   modalEditInfoError: boolean = false;
@@ -38,6 +76,9 @@ export class CurriculumComponent implements OnInit {
 
   // Creamos la listas de Experiencias
   Experiencias: WorkExperience[] = [];
+  
+  // Creamos la listas de Estudios
+  Estudios: Certifications[] = [];
 
 
   // Obtener las claves del objeto Cliente
@@ -76,10 +117,9 @@ export class CurriculumComponent implements OnInit {
     return labels[key] || key;
   }
 
-  listaExperienciaLaborales: any[] = [];
 
   currentKeyUser: any;
-  currentItemExperienciaLaborales: any;
+  currentIndexExperience: any;
 
 
   // Modal para añadir Informacion 
@@ -196,8 +236,6 @@ export class CurriculumComponent implements OnInit {
         }
 
         this.addInformationForm.reset();
-        console.log(this.Cliente)
-        alert("informacion agregada")
         const closebutton =  document.getElementById('addPersonalInformationClose');
         closebutton?.click();
       } else {
@@ -260,8 +298,7 @@ export class CurriculumComponent implements OnInit {
   preeditarInformacionPersonal(key: string) {
     const gridlistControl = this.editInformationForm.get('gridlist');
     const valueControl = this.editInformationForm.get('editvalue');
-    
-    if (valueControl && gridlistControl && this.Cliente[key as keyof User] !== undefined) {
+   if (valueControl && gridlistControl && this.Cliente[key as keyof User] !== undefined) {
       // Establecer los valores en los controles del formulario
       gridlistControl.setValue(key);
       const clienteValue = this.Cliente[key as keyof User] as string; // Asegurando que el valor sea string
@@ -341,7 +378,6 @@ export class CurriculumComponent implements OnInit {
               this.Cliente[this.currentKeyUser as keyof User] =  valueInput as never;  
               this.currentKeyUser = null;
               this.editInformationForm.reset();
-              console.log(this.Cliente);
               alert("informacion actualizada")
               const closebutton = document.getElementById('editPersonalInformationClose');
               closebutton?.click();
@@ -378,25 +414,19 @@ export class CurriculumComponent implements OnInit {
       const reader = new FileReader();
       const image = document.getElementById('bannerImage') as HTMLImageElement;
   
-      reader.onload = (e) => {
-        if (e.target && e.target.result instanceof ArrayBuffer) {
-          const result = e.target.result;
+      reader.onload = () => {
+        if (reader.result && typeof reader.result === 'string') {
+          const base64String = reader.result.split(',')[1];
   
-          // Convertir el ArrayBuffer a una cadena base64
-          const base64String = this.arrayBufferToBase64(result);
-  
-          // Asignar la cadena base64 a this.Cliente.profileImage
-          this.Cliente.bannerImage = base64String; // Se asume que Cliente.profileImage es de tipo string
+          this.Cliente.bannerImage = base64String;
   
           if (image) {
-            // Mostrar la imagen en la página
-            const imageUrl = URL.createObjectURL(file);
-            image.src = imageUrl;
+            image.src = URL.createObjectURL(file);
           }
         }
       };
   
-      reader.readAsArrayBuffer(file); // Leer el archivo como ArrayBuffer
+      reader.readAsDataURL(file); 
     }
   }
   
@@ -417,33 +447,26 @@ export class CurriculumComponent implements OnInit {
      }
       return
     }
+
     onPerfilSelected(event: Event) {
       const input = event.target as HTMLInputElement;
       const file = input.files?.[0];
     
-      if (file) {
+      if (file) { 
         const reader = new FileReader();
         const image = document.getElementById('perfilImage') as HTMLImageElement;
-    
-        reader.onload = (e) => {
-          if (e.target && e.target.result instanceof ArrayBuffer) {
-            const result = e.target.result;
-    
-            // Convertir el ArrayBuffer a una cadena base64
-            const base64String = this.arrayBufferToBase64(result);
-    
-            // Asignar la cadena base64 a this.Cliente.profileImage
-            this.Cliente.profileImage = base64String; // Se asume que Cliente.profileImage es de tipo string
-    
+
+        reader.onload = () => {
+          if (reader.result && typeof reader.result === 'string') {
             if (image) {
-              // Mostrar la imagen en la página
-              const imageUrl = URL.createObjectURL(file);
-              image.src = imageUrl;
+              image.src = URL.createObjectURL(file);
             }
+            const base64String = reader.result.split(',')[1];
+            this.Cliente.profileImage = base64String;
           }
         };
     
-        reader.readAsArrayBuffer(file); // Leer el archivo como ArrayBuffer
+        reader.readAsDataURL(file); 
       }
     }
     
@@ -456,9 +479,11 @@ export class CurriculumComponent implements OnInit {
       }
       return btoa(result);
     }
-    
-    
 
+
+
+    
+    
 
   addWorkExperience() {
     if (this.addWorkExperienceForm.valid) {
@@ -491,25 +516,110 @@ export class CurriculumComponent implements OnInit {
   }
 
   requestEditWorkExperience(index: number) {
+
+   const company = this.editWorkExperienceForm.get("edcompanyName");
+   const country = this.editWorkExperienceForm.get("edcountry")
+   const work = this.editWorkExperienceForm.get("edposition")
+   const func = this.editWorkExperienceForm.get("edjobDescription")
+
+
+   company?.setValue(this.Experiencias[index]?.company ?? null);
+   country?.setValue(this.Experiencias[index]?.country ?? null);
+   work?.setValue(this.Experiencias[index]?.job ?? null);
+   func?.setValue(this.Experiencias[index]?.functions ?? null);
+
+   const sDate = this.editWorkExperienceForm.get("edstartDate");
+   const startDate = this.Experiencias[index]?.startDate;
+   
+   if (startDate instanceof Date) {
+     const startDateString = startDate.toISOString().split('T')[0]; // Obtener YYYY-MM-DD
+     sDate?.setValue(startDateString);
+   } else if (typeof startDate === 'string') {
+     sDate?.setValue(startDate);
+   } else {
+     sDate?.setValue(null);
+   }
+
+   const eDate = this.editWorkExperienceForm.get("edendDate");
+   const endDate = this.Experiencias[index]?.endDate;
+   
+   if (endDate instanceof Date) {
+     const startDateString = endDate.toISOString().split('T')[0]; 
+     eDate?.setValue(startDateString);
+   } else if (typeof endDate === 'string') {
+     eDate?.setValue(endDate);
+   } else {
+     eDate?.setValue(null);
+   }
+
+   // Marcar todos los controles como tocados
+    this.editWorkExperienceForm.markAllAsTouched();
+    // Establecer el index actual de la lista de experiencia para luego editarlo
+    this.currentIndexExperience = index;
  
   }
 
   deleteWorkExperience(index : number) {
     const confirmacion = confirm('¿Estás seguro de que deseas eliminar esta experiencia laboral?');
-  
     if (confirmacion) {
-      this.Experiencias[index].state = 0;
+       this.Experiencias[index].state = 0;
     } 
   }
 
   editWorkExperience(){
+    if (this.editWorkExperienceForm.valid) {
+      
+const empresa = document.getElementById("ednombreEmpresa") as HTMLInputElement;
+const pais = document.getElementById("edpais") as HTMLInputElement;
+const edcargo = document.getElementById("edcargo") as HTMLInputElement;
+const edfechaInicio = document.getElementById("edfechaInicio") as HTMLInputElement;
+const edfechaFin = document.getElementById("edfechaFin") as HTMLInputElement;
+const edfunciones = document.getElementById("edfunciones") as HTMLInputElement;
+
+const startDateString = edfechaInicio.value;
+const endDateString = edfechaFin.value;
+
+if (startDateString && endDateString) {
+  const startDate = new Date(startDateString);
+  const endDate = new Date(endDateString);
+
+  if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+    const index = this.currentIndexExperience;
+    
+    this.Experiencias[index].company = empresa.value;
+    this.Experiencias[index].country = pais.value;
+    this.Experiencias[index].job = edcargo.value;
+    this.Experiencias[index].startDate = startDate;
+    this.Experiencias[index].endDate = endDate;
+    this.Experiencias[index].functions = edfunciones.value;
+
+    const closebutton = document.getElementById('editWorkExperienceClose');
+    closebutton?.click();
+    alert("Informacion Actualizada");
+  } else {
+    alert("La fecha de inicio o la fecha de fin no son válidas");
+  }
+} else {
+  alert("Asegúrate de completar las fechas de inicio y fin");
+}
+
+      } else {
+        alert("Debes llenar todos los campos asdasd");
+      }
+  
 
   }
 
+ formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
 requestAddCv() {
-   console.log("requiriendo actualizar cv")
-  this.createCvService.requestAddCv(this.Cliente as User).subscribe({
+  console.log(this.Experiencias.length)
+  this.createCvService.requestAddCv(this.Cliente as User, this.Experiencias as WorkExperience[]).subscribe({
     next: (userData) => {
       alert("Curriculum Actualizado");
     },
@@ -518,13 +628,6 @@ requestAddCv() {
     }
   });
 }
-
-
-
-
-  
-
-
 
     cerrarSesion() {
       const confirmLogout = confirm("¿Estás seguro de que quieres cerrar la sesión?");

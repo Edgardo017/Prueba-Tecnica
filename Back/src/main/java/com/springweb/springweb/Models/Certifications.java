@@ -11,15 +11,16 @@ public class Certifications {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter @Setter
     private long id;
-
     @Getter @Setter
-    private String name;
+    private String type;
+    @Getter @Setter
+    private String Institution;
 
     @Getter @Setter
     private String career;
 
     @Getter @Setter
-    private String status;
+    private String semester;
 
     @Temporal(TemporalType.DATE)
     @Getter @Setter
@@ -31,4 +32,9 @@ public class Certifications {
 
     @Getter @Setter
     private int state;
+
+    @ManyToOne
+    @JoinColumn(name = "userid", referencedColumnName = "id")
+    @Getter @Setter
+    private User user;
 }

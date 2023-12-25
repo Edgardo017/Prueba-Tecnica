@@ -35,10 +35,8 @@ public class User {
     private String city;
     @Getter @Setter
     private String country;
-    @Lob
-    @Getter @Setter @Column(columnDefinition = "LONGBLOB")
-    private byte[] profileImage;
-    @Lob
-    @Getter @Setter @Column(columnDefinition = "LONGBLOB")
-    private byte[] bannerImage;
+    @Getter @Setter @Column(columnDefinition = "LONGTEXT")
+    private String profileImage;
+    @Getter @Setter @Column(columnDefinition = "LONGTEXT")
+    private String bannerImage;
 }

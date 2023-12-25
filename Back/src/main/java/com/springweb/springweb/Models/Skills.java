@@ -21,4 +21,9 @@ public class Skills {
     @Getter @Setter
     private int state;
 
+    @ManyToOne
+    @JoinColumn(name = "userid", referencedColumnName = "id")
+    @Getter @Setter
+
+    private User user;
 }

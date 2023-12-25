@@ -11,18 +11,32 @@ public class workExperience {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter @Setter
     private long id;
+
     @Getter @Setter
     private String company;
+
     @Getter @Setter
     private String country;
+
     @Getter @Setter
     private String job;
+
+    @Temporal(TemporalType.DATE)
     @Getter @Setter
     private Date startDate;
+
+    @Temporal(TemporalType.DATE)
     @Getter @Setter
     private Date endDate;
+
     @Getter @Setter
     private String functions;
+
     @Getter @Setter
     private int state;
+
+    @ManyToOne
+    @JoinColumn(name = "userid", referencedColumnName = "id")
+    @Getter @Setter
+    private User user;
 }

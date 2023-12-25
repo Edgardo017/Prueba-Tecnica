@@ -41,25 +41,5 @@ public class UserDaoIMP implements UserDao{
         return null;
     }
 
-    @Override
-    public boolean updateUser(User user) {
-        User existingUser = entityManager.find(User.class, user.getId()); // Cambiar a user.getId() en lugar de user.getUsername()
-        if (existingUser != null) {
-            existingUser.setFirstName(user.getFirstName());
-            existingUser.setLastName(user.getLastName());
-            existingUser.setEmail(user.getEmail());
-            existingUser.setDni(user.getDni());
-            existingUser.setPhone(user.getPhone());
-            existingUser.setAddress(user.getAddress());
-            existingUser.setDistrict(user.getDistrict());
-            existingUser.setCity(user.getCity());
-            existingUser.setCountry(user.getCountry());
-            existingUser.setProfileImage(user.getProfileImage());
-            existingUser.setBannerImage(user.getBannerImage());
-            entityManager.merge(existingUser);
-            return true;
-        }
-        return false;
-    }
 
 }

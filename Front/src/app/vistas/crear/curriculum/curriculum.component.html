@@ -32,7 +32,7 @@
                          <div class="col-md-4">
                             <div class="card-body">
                                <div class="form-group">
-                                  <img id="perfilImage"  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnGZWTF4dIu8uBZzgjwWRKJJ4DisphDHEwT2KhLNxBAA&amp;s" alt="Imagen de perfil" style="width: 100%; max-width: 300px; height: auto;" class="form-control" required>
+                                  <img id="perfilImage" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnGZWTF4dIu8uBZzgjwWRKJJ4DisphDHEwT2KhLNxBAA&amp;s" alt="Imagen de perfil" style="width: 100%; max-width: 300px; height: auto;" class="form-control">
                                </div>
                                <div class="form-group">
                                   <label for="cambiarImagen">Cambiar Foto</label>
@@ -45,74 +45,117 @@
                             </div>
                          </div>
                          <div class="col-md-8">
-                            <div class="card-body">
-                              <h5 class="card-title w-100 font-weight-bold font-size-12">Datos Personales</h5>
-                              <ng-container *ngFor="let key of getClienteKeys()">
-                                <ng-container *ngIf="shouldDisplay(key)">
-                                  <div class="form-group">
-                                    <label for="nombre">{{ getKeyLabel(key) }}</label>
-                                    <div class="form-group input-group">
-                                      <input type="text" class="form-control" [id]="key.toLowerCase()" [name]="key.toLowerCase()" [placeholder]="key" [value]="getKeyValue(key)" required readonly>
-                                      <div class="input-group-append">
-                                        <button class="btn btn-outline-danger" type="button" (click)="eliminarInformacionPersonal(key)">
-                                          <i class="bi bi-trash"></i>
-                                        </button>
-                                        <button class="btn btn-outline-primary" type="button" data-toggle="modal" data-target="#editPersonalInformation" (click)="preeditarInformacionPersonal(key)">
-                                          <i class="bi bi-pencil"></i>
-                                        </button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </ng-container>
-                              </ng-container>
-                              <div class="text-md-right mt-3 mb-3">
-                                <button type="button" class="btn" data-toggle="modal" data-target="#addPersonalInformation" style="background-color: #434444; color: white;">Agregar Datos Personales</button>
-                              </div>
+                            <div class="card border-dark mb-3">
+                               <div class="card-header">
+                                  <h5 class="card-title w-100 font-weight-bold font-size-12">Datos Personales</h5>
+                               </div>
+                               <div class="card-body text-dark">
+                                  <ng-container *ngFor="let key of getClienteKeys()">
+                                     <ng-container *ngIf="shouldDisplay(key) && getKeyValue(key) !== null && getKeyValue(key) !== undefined">
+                                        <div class="form-group">
+                                           <label  class="card-title" for="nombre">{{ getKeyLabel(key) }}</label>
+                                           <div class="form-group input-group">
+                                              <input type="text" class="form-control" [id]="key.toLowerCase()" [name]="key.toLowerCase()" [value]="getKeyValue(key) || ''" required readonly>
+                                              <div class="input-group-append">
+                                                 <button class="btn btn-outline-danger" type="button" (click)="eliminarInformacionPersonal(key)">
+                                                 <i class="bi bi-trash"></i>
+                                                 </button>
+                                                 <button class="btn btn-outline-primary" type="button" data-toggle="modal" data-target="#editPersonalInformation" (click)="preeditarInformacionPersonal(key)">
+                                                 <i class="bi bi-pencil"></i>
+                                                 </button>
+                                              </div>
+                                           </div>
+                                        </div>
+                                     </ng-container>
+                                  </ng-container>
+                               </div>
+                               <div class="text-md-right mt-3 mb-3">
+                                  <button type="button" class="btn" data-toggle="modal" data-target="#addPersonalInformation" style="background-color: #434444; color: white;">Agregar Datos Personales</button>
+                               </div>
                             </div>
-                          </div>                                                
+                         </div>
                       </div>
                    </div>
-                   <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="card-body">
-                                <div class="card-header text-center">
-                                    <h5 class="card-title w-100 font-weight-bold font-size-12">Experiencia Laboral</h5>
-                                </div>
-                                <br>
-                                <ng-container *ngFor="let item of Experiencias; let i = index">
-                                    <div class="form-group" *ngIf="item.state == 1">
-                                        <div class="input-group-append justify-content-end">
-                                            <button class="btn btn-outline-danger mr-1" type="button" (click)="deleteWorkExperience(i)">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                            <button class="btn btn-outline-primary" type="button" data-toggle="modal" data-target="#editWorkExperience" (click)="requestEditWorkExperience(i)">
-                                                <i class="bi bi-pencil"></i>
-                                              </button>                        
+                </div>
+                <div class="row justify-content-center">
+                   <div class="col-11">
+                      <div class="card">
+                         <div class="card-header text-center">
+                            <h5 class="card-title w-100 font-weight-bold font-size-12">Experiencia Laboral</h5>
+                         </div>
+                         <div class="card-body">
+                            <div class="row justify-content-center">
+                               <div class="col-12">
+                                  <ng-container *ngFor="let item of Experiencias; let i = index">
+                                     <div class="card border-secondary mb-3" style="max-width: 100%">
+                                        <div class="card-header text-center position-relative">
+                                           <div class="position-absolute top-0 end-0 mt-2 me-2 text-md-end mt-3 mb-3">
+                                              <button class="btn btn-outline-danger me-2" type="button" (click)="deleteWorkExperience(i)">
+                                              <i class="bi bi-trash"></i>
+                                              </button>
+                                              <button class="btn btn-outline-primary" type="button" data-toggle="modal" data-target="#editWorkExperience" (click)="requestEditWorkExperience(i)">
+                                              <i class="bi bi-pencil"></i>
+                                              </button>
+                                           </div>
+                                           <h5 class="card-title mb-1">{{ item.company }}, {{ item.country }}</h5>
+                                           <br>
+                                           <h6 class="card-subtitle mb-1">{{ item.job }} de {{ item.startDate }} hasta {{ item.endDate }}</h6>
                                         </div>
-                                        <div style="text-align: center;">
-                                            <h5>{{ item.company }}, {{ item.country }}</h5>
-                                            <h6 style="font-style: italic;">{{ item.job }} de {{ item.startDate }} hasta {{ item.endDate }}</h6>
-                                            <div style="text-align: left;">
-                                                <label style="font-weight: bold; font-size: 20px;">Funciones</label>
-                                                <textarea id="texto" readonly style="border: none; width: 100%; resize: none; text-align: left;" rows="5" onfocus="this.blur()">{{ item.functions }}</textarea>
-                                            </div>
+                                        <div class="card-body text-secondary">
+                                           <h5 class="card-title">Funciones</h5>
+                                           <p class="card-text">{{ item.functions }}.</p>
                                         </div>
-                                    </div>
-                                </ng-container>
-                                <div class="text-md-right mt-3 mb-3">
-                                    <button type="button" class="btn" data-toggle="modal" data-target="#addWorkExperience" style="background-color: #434444; color: white;">Agregar Experiencia Laboral</button>
-                                </div>
+                                     </div>
+                                  </ng-container>
+                               </div>
                             </div>
-                        </div>
+                            <div class="text-md-right mt-3 mb-3">
+                               <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addWorkExperience">Agregar Experiencia Laboral</button>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-11">
+                       <div class="card">
+                          <div class="card-header text-center">
+                             <h5 class="card-title w-100 font-weight-bold font-size-12">Estudios y Certificaciones</h5>
+                          </div>
+                          <div class="card-body">
+                            <div class="card border-light mb-3" style="max-width: 18rem;">
+                                <div class="card-header">Header</div>
+                                <div class="card-body">
+                                  <h5 class="card-title">Light card title</h5>
+                                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                </div>
+                              </div>
+                              <div class="card border-light mb-3" style="max-width: 18rem;">
+                                <div class="card-header">Header</div>
+                                <div class="card-body">
+                                  <h5 class="card-title">Light card title</h5>
+                                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                </div>
+                              </div>
+                              <div class="card border-light mb-3" style="max-width: 18rem;">
+                                <div class="card-header">Header</div>
+                                <div class="card-body">
+                                  <h5 class="card-title">Light card title</h5>
+                                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                </div>
+                              </div>
+                             <div class="text-md-right mt-3 mb-3">
+                                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addWorkExperience">Agregar Experiencia Laboral</button>
+                             </div>
+                          </div>
+                       </div>
                     </div>
-                </div>
-                
+                 </div>
+                <br>
                 <div class="card-footer">
-                    <input type="hidden" name="action" value="actualizar_perfil">
-                    <button type="button" class="btn btn-primary" (click)="requestAddCv()">Guardar</button>
+                   <input type="hidden" name="action" value="actualizar_perfil">
+                   <button type="button" class="btn btn-primary" (click)="requestAddCv()">Guardar</button>
                 </div>
-                  
                 <div class="modal fade" id="addPersonalInformation" tabindex="-1" role="dialog" aria-labelledby="addPersonalInformationLabel" aria-hidden="true">
                    <div class="modal-dialog" role="document">
                       <div class="modal-content">
@@ -207,8 +250,6 @@
                       </div>
                    </div>
                 </div>
-
-
                 <div class="modal fade" id="addWorkExperience" tabindex="-1" role="dialog" aria-labelledby="addWorkExperienceLabel" aria-hidden="true">
                    <div class="modal-dialog" role="document">
                       <div class="modal-content">
@@ -293,92 +334,90 @@
                       </div>
                    </div>
                 </div>
-
-
                 <div class="modal fade" id="editWorkExperience" tabindex="-1" role="dialog" aria-labelledby="editWorkExperienceLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                       <div class="modal-content">
-                          <div class="modal-header">
-                             <h5 class="modal-title" id="editWorkExperienceLabel">Editar Experiencia Laboral</h5>
-                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                             <span aria-hidden="true">&times;</span>
-                             </button>
-                          </div>
-                          <form [formGroup]="editWorkExperienceForm" (ngSubmit)="editWorkExperience()">
-                          <div class="modal-body">
-                             <div class="container">
-                                <div class="row">
-                                   <div class="col-md-6">
-                                      <label for="nombreEmpresa">Nombre de la Empresa:</label>
-                                      <input type="text" class="form-control" id="ednombreEmpresa" formControlName="edcompanyName" placeholder="Nombre de la Empresa" required>
-                                      <div *ngIf="edcompanyName.invalid && (edcompanyName.dirty || edcompanyName.touched)" class="text-danger">
-                                         <div *ngIf="edcompanyName.errors?.['required']">
-                                            Necesitas rellenar este campo
-                                         </div>
-                                      </div>
-                                   </div>
-                                   <div class="col-md-6">
-                                      <label for="pais">País:</label>
-                                      <input type="text" class="form-control" id="edpais" formControlName="edcountry" placeholder="País" required>
-                                      <div *ngIf="edcountry.invalid && (edcountry.dirty || edcountry.touched)" class="text-danger">
-                                         <div *ngIf="edcountry.errors?.['required']">
-                                            Necesitas rellenar este campo
-                                         </div>
-                                      </div>
-                                   </div>
-                                </div>
-                                <div class="row">
-                                   <div class="col-md-12">
-                                      <label for="cargo">Cargo:</label>
-                                      <input type="text" class="form-control" id="edcargo" formControlName="edposition" placeholder="Cargo" required>
-                                      <div *ngIf="edposition.invalid && (edposition.dirty || edposition.touched)" class="text-danger">
-                                         <div *ngIf="edposition.errors?.['required']">
-                                            Necesitas rellenar este campo
-                                         </div>
-                                      </div>
-                                   </div>
-                                </div>
-                                <div class="row">
-                                   <div class="col-md-6">
-                                      <label for="fechaInicio">Fecha de Inicio:</label>
-                                      <input type="date" class="form-control" id="edfechaInicio" formControlName="edstartDate" required>
-                                      <div *ngIf="edstartDate.invalid && (edstartDate.dirty || edstartDate.touched)" class="text-danger">
-                                         <div *ngIf="edstartDate.errors?.['required']">
-                                            Necesitas rellenar este campo
-                                         </div>
-                                      </div>
-                                   </div>
-                                   <div class="col-md-6">
-                                      <label for="fechaFin">Fecha de Fin:</label>
-                                      <input type="date" class="form-control" id="edfechaFin" formControlName="edendDate">
-                                      <div *ngIf="edendDate.invalid && (edendDate.dirty || edendDate.touched)" class="text-danger">
-                                         <div *ngIf="endDate.errors?.['required']">
-                                            Necesitas rellenar este campo
-                                         </div>
-                                      </div>
-                                   </div>
-                                </div>
-                                <div class="row">
-                                   <div class="col-md-12">
-                                      <label for="funciones">Funciones Realizadas:</label>
-                                      <textarea class="form-control" id="edfunciones" formControlName="edjobDescription" rows="5" placeholder="Funciones Realizadas" required></textarea>
-                                      <div *ngIf="edjobDescription.invalid && (edjobDescription.dirty || edjobDescription.touched)" class="text-danger">
-                                         <div *ngIf="edjobDescription.errors?.['required']">
-                                            Necesitas rellenar este campo
-                                         </div>
-                                      </div>
-                                   </div>
-                                </div>
-                             </div>
-                          </div>
-                          <div class="modal-footer">
-                             <button type="button" class="btn btn-secondary" data-dismiss="modal" id= "editWorkExperienceClose">Cerrar</button>
-                             <button type="submit" class="btn btn-primary">Aceptar</button>
-                          </div>
-                          </form>
-                       </div>
-                    </div>
-                 </div>                
+                   <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                         <div class="modal-header">
+                            <h5 class="modal-title" id="editWorkExperienceLabel">Editar Experiencia Laboral</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                         </div>
+                         <form [formGroup]="editWorkExperienceForm" (ngSubmit)="editWorkExperience()">
+                         <div class="modal-body">
+                            <div class="container">
+                               <div class="row">
+                                  <div class="col-md-6">
+                                     <label for="nombreEmpresa">Nombre de la Empresa:</label>
+                                     <input type="text" class="form-control" id="ednombreEmpresa" formControlName="edcompanyName" placeholder="Nombre de la Empresa" required>
+                                     <div *ngIf="edcompanyName.invalid && (edcompanyName.dirty || edcompanyName.touched)" class="text-danger">
+                                        <div *ngIf="edcompanyName.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                     <label for="pais">País:</label>
+                                     <input type="text" class="form-control" id="edpais" formControlName="edcountry" placeholder="País" required>
+                                     <div *ngIf="edcountry.invalid && (edcountry.dirty || edcountry.touched)" class="text-danger">
+                                        <div *ngIf="edcountry.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-md-12">
+                                     <label for="cargo">Cargo:</label>
+                                     <input type="text" class="form-control" id="edcargo" formControlName="edposition" placeholder="Cargo" required>
+                                     <div *ngIf="edposition.invalid && (edposition.dirty || edposition.touched)" class="text-danger">
+                                        <div *ngIf="edposition.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-md-6">
+                                     <label for="fechaInicio">Fecha de Inicio:</label>
+                                     <input type="date" class="form-control" id="edfechaInicio" formControlName="edstartDate" required>
+                                     <div *ngIf="edstartDate.invalid && (edstartDate.dirty || edstartDate.touched)" class="text-danger">
+                                        <div *ngIf="edstartDate.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                     <label for="fechaFin">Fecha de Fin:</label>
+                                     <input type="date" class="form-control" id="edfechaFin" formControlName="edendDate">
+                                     <div *ngIf="edendDate.invalid && (edendDate.dirty || edendDate.touched)" class="text-danger">
+                                        <div *ngIf="endDate.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-md-12">
+                                     <label for="funciones">Funciones Realizadas:</label>
+                                     <textarea class="form-control" id="edfunciones" formControlName="edjobDescription" rows="5" placeholder="Funciones Realizadas" required></textarea>
+                                     <div *ngIf="edjobDescription.invalid && (edjobDescription.dirty || edjobDescription.touched)" class="text-danger">
+                                        <div *ngIf="edjobDescription.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                         <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id= "editWorkExperienceClose">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                         </div>
+                         </form>
+                      </div>
+                   </div>
+                </div>
              </div>
           </div>
        </div>

@@ -8,3 +8,4 @@ export interface WorkExperience {
   functions?: string | null;
   state?: number; // Estado inicial 1
 }
+
