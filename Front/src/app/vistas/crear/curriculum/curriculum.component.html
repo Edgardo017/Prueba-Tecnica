@@ -51,8 +51,10 @@
                                </div>
                                <div class="card-body">
                                   <blockquote class="blockquote mb-0">
-                                     <textarea class="form-control" id="cartaPresentacion" rows="5" maxlength="500" placeholder="Escribe aquí tu carta de presentación (máximo 500 caracteres)" required></textarea>
-                                     <footer class="blockquote-footer">Una carta de presentación no solo revela quién eres, sino quién puedes llegar a ser en esta oportunidad única. Es tu voz, tu historia y tu oportunidad de destacar entre los demás, ¡aprovéchala para brillar!</footer>
+                                    <textarea class="form-control" id="cartaPresentacion" rows="5" maxlength="500" placeholder="Escribe aquí tu carta de presentación (máximo 500 caracteres)" required>
+                                       {{ Cliente.presentation ? Cliente.presentation : '' }}
+                                     </textarea>                                    
+                                      <footer class="blockquote-footer">Una carta de presentación no solo revela quién eres, sino quién puedes llegar a ser en esta oportunidad única. Es tu voz, tu historia y tu oportunidad de destacar entre los demás, ¡aprovéchala para brillar!</footer>
                                   </blockquote>
                                </div>
                             </div>

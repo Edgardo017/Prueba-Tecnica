@@ -1,1 +1,117 @@
-<p>vercurriculum works!</p>
+<br>
+<div class="container" style="width: 1100px; margin: auto auto;">
+    <div class="card" style="width: 100%">
+        <div style="position: relative; width: 100%; height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+          <img id="perfilImage" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnGZWTF4dIu8uBZzgjwWRKJJ4DisphDHEwT2KhLNxBAA&amp;s" alt="Card image cap" style="position: absolute; top: 50%; transform: translateY(-50%); width: auto; height: 90%; left: 10px;">
+            <div style="position: absolute; top: 0; left: 100px; right: 0; bottom: 0; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+              <h2 style="margin: 0; font-weight: bold; font-size: 40px;">{{ cliente.firstName }} {{ cliente.lastName }}</h2>
+              <p style="margin: 5px 0; font-size: 20px;">Direccion: {{ cliente.address || '' }},    {{ cliente.district || '' }},    {{ cliente.city || '' }},    {{ cliente.country || '' }}</p>
+              <p style="margin: 5px 0; font-size: 20px;">Telf: {{ cliente.phone || '' }},    email: {{ cliente.email || '' }},    dni: {{ cliente.dni || '' }}</p>         
+          </div>
+          
+           <img id="bannerImage" src="data:image/jpeg;base64,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" alt="Card image cap" style="width: 100%; height: 100%; display: block; margin: auto;">
+           <div style="position: absolute; top: 10px; right: 10px;">
+            <button class="btn btn-outline-danger"         data-toggle="modal"
+            data-target="#cartadePrESentacion">
+                <i class="bi bi-envelope-fill"></i> Carta de Presentacion
+            </button>
+         </div>
+          </div>
+        
+        
+        <div class="card-body">
+          <h5 class="card-title w-100 font-weight-bold font-size-12">Perfil</h5>
+          <p class="card-text">{{ cliente.profile || '' }}</p>
+        </div>
+
+        <ul class="list-group list-group-flush">
+          <div class="card">
+            <div class="card-header text-center">
+              <h5 class="card-title w-100 font-weight-bold font-size-12">Experiencia Laboral</h5>
+            </div>
+            <div class="card-body" *ngFor="let experiencia of experiencias">
+              <blockquote class="blockquote mb-0 text-center">
+                <p>{{ experiencia.company }}, {{ experiencia.country }}</p>
+                <p style = "color: #6c757d; font-size: 80%">{{ experiencia.job }}, {{ experiencia.startDate  }} – {{ experiencia.endDate ? (experiencia.endDate) : 'Actualidad' }}</p>
+              </blockquote>
+              <div class="form-group">
+                <label for="exampleFormControlTextarea1">Funciones</label>
+                <div class="card">
+                  <div class="card-body">
+                    {{ experiencia.functions}}                  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ul>
+
+        <ul class="list-group list-group-flush">
+          <div class="card">
+            <div class="card-header text-center">
+              <h5 class="card-title w-100 font-weight-bold font-size-12">Educacion</h5>
+            </div>
+            <div class="row">
+              <div class="col-md-6" *ngFor="let estudio of estudios">
+                <div class="card-body">
+                  <blockquote class="blockquote mb-0 text-center">
+                    <h6 class="font-weight-bold">{{ estudio.institution }} </h6>
+                    <p style="color: #6c757d; font-size: 80%">{{ estudio.type }}</p>
+                  </blockquote>
+                  <div class="form-group">
+                    <label for="exampleFormControlTextarea1">
+                      {{ estudio.career }}, 
+                      {{ estudio.type !== 'Certificado' ? estudio.semester + ' Ciclo' : estudio.semester }},
+                      {{ estudio.startYear }}, {{ estudio.endYear }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ul>
+        
+        <ul class="list-group list-group-flush">
+          <div class="card">
+            <div class="card-header text-center">
+              <h5 class="card-title w-100 font-weight-bold font-size-12">Habilidades Adicionales</h5>
+            </div>
+            <div class="row">
+              <div class="col-md-6" *ngFor="let habilidad of habilidades">
+                <div class="card-body text-center">
+                  <h6 class="font-weight-bold">Habilidad </h6>
+                  <p>{{ habilidad.skill }}     {{ habilidad.percentage }} %</p>
+                  <h6 class="font-weight-bold">Description</h6>
+                  <p>{{ habilidad.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ul>
+
+
+        <div class="card-footer">
+          <input type="hidden" name="action" value="actualizar_perfil">
+          <button type="button" class="btn btn-primary" (click)="toLogin()">Salir</button>
+       </div>
+    </div>
+
+    <div class="modal fade" id="cartadePrESentacion" tabindex="-1" role="dialog" aria-labelledby="addPersonalInformationLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Carta de Presentacion</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>{{ cliente.presentation || '' }}</p>  
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+   </div>
+</div>

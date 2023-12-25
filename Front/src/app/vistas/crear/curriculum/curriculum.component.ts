@@ -100,7 +100,7 @@ export class CurriculumComponent implements OnInit {
   }
 
   shouldDisplay(key: string): boolean {
-    const excludedKeys = ['id', 'username', 'password', 'bannerImage', 'profileImage'];
+    const excludedKeys = ['id', 'username', 'password', 'bannerImage', 'profileImage', 'presentation'];
     return !excludedKeys.includes(key);
   }
 

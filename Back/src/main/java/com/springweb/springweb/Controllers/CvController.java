@@ -53,24 +53,29 @@ public class CvController {
         return ResponseEntity.ok(curriculum);
     }
 
-    @RequestMapping(value = "/verCurriculum/{username}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Object> verCurriculum(@PathVariable("username") String username) {
-        User user = CvDao.getUserByUsername(username);
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+    @RequestMapping(value = "/verCurriculum", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Object> verCurriculum(@RequestBody String username) {
+        try {
+            User user = CvDao.getUserByUsername(username);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+            }
+
+            List<workExperience> experiences = CvDao.getWorkExperiencesByUserUsername(username);
+            List<Certifications> certifications = CvDao.getCertificationsByUserUsername(username);
+            List<Skills> skills = CvDao.getSkillsByUserUsername(username);
+
+            Curriculum curriculum = new Curriculum();
+            curriculum.setUser(user);
+            curriculum.setWorkExperience(experiences);
+            curriculum.setCertifications(certifications);
+            curriculum.setSkills(skills);
+
+            return ResponseEntity.ok(curriculum);
+        } catch (Exception ex) {
+            // Manejar cualquier excepción no esperada
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar la solicitud");
         }
-
-        List<workExperience> experiences = CvDao.getWorkExperiencesByUserUsername(username);
-        List<Certifications> certifications = CvDao.getCertificationsByUserUsername(username);
-        List<Skills> skills = CvDao.getSkillsByUserUsername(username);
-
-        Curriculum curriculum = new Curriculum();
-        curriculum.setUser(user);
-        curriculum.setWorkExperience(experiences);
-        curriculum.setCertifications(certifications);
-        curriculum.setSkills(skills);
-
-        return ResponseEntity.ok(curriculum);
     }
 
 

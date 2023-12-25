@@ -74,7 +74,6 @@ public class CvDaoIMP implements CvDao{
     public User getUserByUsername(String username) {
         String query = "SELECT u FROM User u WHERE u.username = :username";
         User user = entityManager.createQuery(query, User.class).setParameter("username", username).getSingleResult();
-        user.setId(99999999l);
         user.setPassword(null);
         return user;
     }
@@ -153,6 +152,7 @@ public class CvDaoIMP implements CvDao{
 
         User existingUser = entityManager.find(User.class, userId);
         if (existingUser != null) {
+            user.setPassword(existingUser.getPassword());
             existingUser.setFirstName(user.getFirstName());
             existingUser.setLastName(user.getLastName());
             existingUser.setEmail(user.getEmail());
@@ -228,6 +228,8 @@ public class CvDaoIMP implements CvDao{
             }
 
             entityManager.merge(existingUser);
+
+            user.setPassword(null);
             return curriculum;
         }
         return null;

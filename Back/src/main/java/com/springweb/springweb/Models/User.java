@@ -37,7 +37,7 @@ public class User {
     private String country;
     @Getter @Setter @Column(length = 500)
     private String profile;
-    @Getter @Setter @Column(length = 500)
+    @Getter @Setter @Column(length = 5000)
     private String presentation;
 
     @Getter @Setter @Column(columnDefinition = "LONGTEXT")
