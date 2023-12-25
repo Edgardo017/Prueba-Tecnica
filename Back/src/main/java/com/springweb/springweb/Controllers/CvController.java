@@ -1,9 +1,7 @@
 package com.springweb.springweb.Controllers;
 
 import com.springweb.springweb.DAO.CvDao;
-import com.springweb.springweb.Models.Curriculum;
-import com.springweb.springweb.Models.User;
-import com.springweb.springweb.Models.workExperience;
+import com.springweb.springweb.Models.*;
 import com.springweb.springweb.Utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,31 +38,54 @@ public class CvController {
         }
 
         List<workExperience> experiences = CvDao.getWorkExperiencesByUserId(Long.parseLong(tokenUserId));
+        List<Certifications> certifications = CvDao.getCertificationsByUserId(Long.parseLong(tokenUserId));
+        List<Skills> skills = CvDao.getSkillsByUserId(Long.parseLong(tokenUserId));
 
+        newUser.setPassword(null);
         Curriculum curriculum = new Curriculum();
         curriculum.setUser(newUser);
         curriculum.setWorkExperience(experiences);
+        curriculum.setCertifications(certifications);
+        curriculum.setSkills(skills);
+
+        System.out.println(certifications.size());
+
+        return ResponseEntity.ok(curriculum);
+    }
+
+    @RequestMapping(value = "/verCurriculum/{username}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Object> verCurriculum(@PathVariable("username") String username) {
+        User user = CvDao.getUserByUsername(username);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        }
+
+        List<workExperience> experiences = CvDao.getWorkExperiencesByUserUsername(username);
+        List<Certifications> certifications = CvDao.getCertificationsByUserUsername(username);
+        List<Skills> skills = CvDao.getSkillsByUserUsername(username);
+
+        Curriculum curriculum = new Curriculum();
+        curriculum.setUser(user);
+        curriculum.setWorkExperience(experiences);
+        curriculum.setCertifications(certifications);
+        curriculum.setSkills(skills);
 
         return ResponseEntity.ok(curriculum);
     }
 
 
-
     @RequestMapping(value = "/api/actualizarCv", method = RequestMethod.POST)
-    public String actualizarCV(@RequestHeader("Authorization") String token, @RequestBody Curriculum Curriculum) {
+    public ResponseEntity<Object> actualizarCV(@RequestHeader("Authorization") String token, @RequestBody Curriculum Curriculum) {
+        if (jwtuil.isTokenExpired(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token Expirado");
+        }
 
-        if ( jwtuil.isTokenExpired(token) )
-            System.out.println("token expirado");
-        else
-            System.out.println("token no expirado");
-        System.out.println(Curriculum.getUser().getFirstName());
-        System.out.println("back " + Curriculum.getWorkExperience().size());
-        System.out.println(Curriculum);
-
-
-        if (CvDao.updateUser(token, Curriculum))
-            return "curriculum actualizado jeje";
-        return "error 403";
+        Curriculum cv = CvDao.updateUser(token, Curriculum);
+        if (cv != null){
+            cv.getUser().setPassword(null);
+            return ResponseEntity.ok(cv);
+        }
+        return null;
     }
 
 }

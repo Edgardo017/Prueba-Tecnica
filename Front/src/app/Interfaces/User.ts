@@ -11,6 +11,8 @@ export interface User {
     district?: string | null;
     city?: string | null;
     country?: string | null;
+    profile?: string | null;
+    presentation?: string | null;
     profileImage?: string | null; // Imagen de perfil en formato base64 (string)
     bannerImage?: string | null; // Imagen del banner en formato base64 (string)
 }

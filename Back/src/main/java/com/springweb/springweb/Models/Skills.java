@@ -17,7 +17,8 @@ public class Skills {
 
     @Getter @Setter
     private int percentage;
-
+    @Getter @Setter
+    private String description;
     @Getter @Setter
     private int state;
 

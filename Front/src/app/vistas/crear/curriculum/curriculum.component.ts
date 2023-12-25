@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; // Importa el servicio de
 import { User } from '../../../Interfaces/User';
 import { WorkExperience  } from '../../../Interfaces/WorkExperience';
 import { Certifications  } from '../../../Interfaces/Certifications';
-
+import { Skills  } from '../../../Interfaces/Skills';
 import { CreateCvService } from '../../../service/create-cv.service';
 
 @Component({
@@ -28,13 +28,19 @@ export class CurriculumComponent implements OnInit {
       return;
     }
   
-    this.createCvService.requestDataCV().subscribe({
+    this.createCvService.getCurriculum().subscribe({
       next: (userData) => {
+        console.log(userData);
         // Verifica si hay datos de usuario y experiencias laborales
-        if (userData && userData.user && userData.workExperience) {
-          this.Cliente = userData.user;
-          this.Experiencias = userData.workExperience;
-          
+        if (userData) {
+          if (userData.user)
+              this.Cliente = userData.user;
+          if (userData.workExperience)
+              this.Experiencias = userData.workExperience;
+          if (userData.certifications)
+              this.Estudios = userData.certifications;
+          if (userData.skills)
+              this.Habilidades = userData.skills;
           // Cargar las imágenes si están disponibles
           this.loadPerfilImage();
           this.loadBannerImage();
@@ -76,9 +82,11 @@ export class CurriculumComponent implements OnInit {
 
   // Creamos la listas de Experiencias
   Experiencias: WorkExperience[] = [];
-  
+
   // Creamos la listas de Estudios
   Estudios: Certifications[] = [];
+
+  Habilidades: Skills[] = [];
 
 
   // Obtener las claves del objeto Cliente
@@ -110,6 +118,8 @@ export class CurriculumComponent implements OnInit {
       district: 'Distrito',
       city: 'Ciudad',
       country: 'País',
+      presentation: 'Carta de Presentacion',
+      profile: "Perfil",
       profileImage: 'Imagen de perfil',
       bannerImage: 'Imagen de banner',
     };
@@ -120,6 +130,8 @@ export class CurriculumComponent implements OnInit {
 
   currentKeyUser: any;
   currentIndexExperience: any;
+  currentIndexStudy: any;
+  currentIndexSkill: any;
 
 
   // Modal para añadir Informacion 
@@ -156,7 +168,40 @@ export class CurriculumComponent implements OnInit {
     edendDate: [''],
     edjobDescription: ['', Validators.required]
   });
+
+  addStudiesForm =  this.formBuilder.group({
+
+    typeStudy: ['', Validators.required],
+    school: ['', Validators.required],
+    career: ['', Validators.required],
+    studySemestre: ['1', Validators.required],
+    startStudy: [''],
+    endStudy: ['', Validators.required],
+    studyState: ['', Validators.required]
+  });
  
+  editStudiesForm = this.formBuilder.group({
+    editTypeStudy: ['', Validators.required],
+    editSchool: ['', Validators.required],
+    editCareer: ['', Validators.required],
+    editStudySemestre: ['1', Validators.required],
+    editStartStudy: [''],
+    editEndStudy: ['', Validators.required],
+    editStudyState: ['', Validators.required]
+  });
+
+  addSkillForm = this.formBuilder.group({
+    skillName: ['', Validators.required],
+    skillPercentage: ['', Validators.pattern('^[0-9]+$')],
+    skillDescription: ['', Validators.required],
+  });
+
+  editSkillForm = this.formBuilder.group({
+    editSkillName: ['', Validators.required],
+    editSkillPercentage: ['', Validators.pattern('^[0-9]+$')],
+    editSkillDescription: ['', Validators.required],
+  });
+
 
   get value() {
     return this.addInformationForm.controls.value;
@@ -213,6 +258,86 @@ export class CurriculumComponent implements OnInit {
   get edjobDescription() {
     return this.editWorkExperienceForm.controls.edjobDescription;
   }
+
+  get typeStudy() {
+    return this.addStudiesForm.controls.typeStudy;
+  }
+  
+  get school() {
+    return this.addStudiesForm.controls.school;
+  }
+  
+  get career() {
+    return this.addStudiesForm.controls.career;
+  }
+  
+  get studySemestre() {
+    return this.addStudiesForm.controls.studySemestre;
+  }
+  
+  get startStudy() {
+    return this.addStudiesForm.controls.startStudy;
+  }
+  
+  get endStudy() {
+    return this.addStudiesForm.controls.endStudy;
+  }
+  
+  get studyState() {
+    return this.addStudiesForm.controls.studyState;
+  }
+
+  get editTypeStudy() {
+    return this.editStudiesForm.controls.editTypeStudy;
+  }
+  
+  get editSchool() {
+    return this.editStudiesForm.controls.editSchool;
+  }
+  
+  get editCareer() {
+    return this.editStudiesForm.controls.editCareer;
+  }
+  
+  get editStudySemestre() {
+    return this.editStudiesForm.controls.editStudySemestre;
+  }
+  
+  get editStartStudy() {
+    return this.editStudiesForm.controls.editStartStudy;
+  }
+  
+  get editEndStudy() {
+    return this.editStudiesForm.controls.editEndStudy;
+  }
+  
+  get editStudyState() {
+    return this.editStudiesForm.controls.editStudyState;
+  }
+
+  get skillName() {
+    return this.addSkillForm.controls.skillName;
+  }
+
+  get skillPercentage() {
+    return this.addSkillForm.controls.skillPercentage;
+  }
+
+  get skillDescription() {
+    return this.addSkillForm.controls.skillDescription;
+  }
+
+  get editSkillName() {
+    return this.editSkillForm.controls.editSkillName;
+  }
+
+  get editSkillPercentage() {
+    return this.editSkillForm.controls.editSkillPercentage;
+  }
+
+  get editSkillDescription() {
+    return this.editSkillForm.controls.editSkillDescription;
+  }
   
   addPersonalInformation() {
     if (this.modalAddInfoError === true) {
@@ -227,6 +352,7 @@ export class CurriculumComponent implements OnInit {
         const textInformation = selectedOption.textContent || selectedOption.innerText;
         const valueInput      = input.value;
         const currentKeyValue = this.Cliente[nameInformation as keyof User]
+        console.log(nameInformation)
 
         if (currentKeyValue === undefined || currentKeyValue === null) {
           this.Cliente[nameInformation as keyof User] = valueInput as never;                       
@@ -298,17 +424,21 @@ export class CurriculumComponent implements OnInit {
   preeditarInformacionPersonal(key: string) {
     const gridlistControl = this.editInformationForm.get('gridlist');
     const valueControl = this.editInformationForm.get('editvalue');
-   if (valueControl && gridlistControl && this.Cliente[key as keyof User] !== undefined) {
+  
+    if (valueControl && gridlistControl && this.Cliente[key as keyof User] !== undefined) {
       // Establecer los valores en los controles del formulario
       gridlistControl.setValue(key);
       const clienteValue = this.Cliente[key as keyof User] as string; // Asegurando que el valor sea string
       valueControl.setValue(clienteValue);
     
-      // Agregar una opción al gridlist (suponiendo que es un select)
+      // Limpiar las opciones actuales en el gridlist (suponiendo que es un select)
       const gridlistElement = document.getElementById("edit.personalInformationGridList") as HTMLSelectElement;
+      gridlistElement.innerHTML = ''; // Elimina todas las opciones actuales
+    
+      // Agregar una única opción al gridlist
       const newOption = document.createElement('option');
       newOption.value = key;
-      newOption.text =this.getKeyLabel(key);
+      newOption.text = this.getKeyLabel(key); // Suponiendo que tienes una función para obtener la etiqueta
       gridlistElement.appendChild(newOption);
     
       // Marcar todos los controles como tocados
@@ -319,38 +449,39 @@ export class CurriculumComponent implements OnInit {
     }
   }
   
+  
   validarCampoDeEdicionInformacion() {
     this.modalEditInfoError = false 
     const errors: string[] = [];
     const gridlistControl = this.editInformationForm.controls.gridlist;
     const valueControl = this.editInformationForm.controls.editvalue;
-  
+
     const letters = valueControl.value?.length
     if (letters && letters > 0) {
       if (gridlistControl.value === 'dni') {
         const dniValue = valueControl.value.toString(); // Asegurarse de que value sea un string
         if (!/^\d+$/.test(dniValue)) {
-          this.modalAddInfoError = true;
+          this.modalEditInfoError = true;
           errors.push('El DNI solo acepta datos numericos');
         }else if (dniValue.length !== 8) {
-            this.modalAddInfoError = true;
+            this.modalEditInfoError = true;
             errors.push('El DNI debe tener exactamente 8 dígitos numéricos.');
         }
         
       } else if (gridlistControl.value === 'phone') {
         const phoneValue = valueControl.value.toString(); // Asegurarse de que value sea un string
         if (!/^\d+$/.test(phoneValue)) {
-          this.modalAddInfoError = true;
+          this.modalEditInfoError = true;
           errors.push('Solo se aceptan datos numericos');
         }else if (phoneValue.length !== 9) {
-            this.modalAddInfoError = true;
+            this.modalEditInfoError = true;
             errors.push('El Telefono debe tener exactamente 9 dígitos numéricos.');
         }
       } else if (gridlistControl.value === 'email') {
         // Si el gridlist es 'email', verificar el formato de correo electrónico
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(valueControl.value)) {
-          this.modalAddInfoError = true 
+          this.modalEditInfoError = true 
           errors.push('El formato del correo electrónico no es válido.');
         }
       }
@@ -604,23 +735,211 @@ if (startDateString && endDateString) {
 }
 
       } else {
-        alert("Debes llenar todos los campos asdasd");
+        alert("Debes llenar todos los campos");
       }
   
 
   }
 
- formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  addEsudies(){
+    if (this.addStudiesForm.valid) {
+        const typeStudy = document.getElementById("typeStudy") as HTMLInputElement;
+        const Institucion = document.getElementById("Institucion") as HTMLSelectElement;
+        const career = document.getElementById("career") as HTMLSelectElement;
+        const studySemestre = document.getElementById("studySemestre") as HTMLSelectElement;
+        const startStudy = document.getElementById("startStudy") as HTMLSelectElement;
+        const endStudy = document.getElementById("endStudy") as HTMLSelectElement;
+        const studyState = document.getElementById("studyState") as HTMLSelectElement;
+
+      // Crear una instancia de workExperience
+      const newItem: Certifications = {
+        type: typeStudy.value,
+        institution: Institucion.value,
+        career: career.value,
+        semester: studySemestre.value,
+        startYear: new Date(startStudy.value),
+        endYear: new Date(endStudy.value),
+        studyState: studyState.value,
+        state: 1,
+      };
+      this.Estudios.push(newItem);
+      const closebutton = document.getElementById('addStudiesModalClose');
+      closebutton?.click();
+    
+    }else {
+      alert("Debes llenar todos los campos");
+    }
+
+  }
+  deleteStudy(index: number){
+    const confirmacion = confirm('¿Estás seguro de que deseas eliminar estos estudios?');
+     if (confirmacion) {
+         this.Estudios[index].state = 0;
+    } 
   }
 
-requestAddCv() {
-  console.log(this.Experiencias.length)
-  this.createCvService.requestAddCv(this.Cliente as User, this.Experiencias as WorkExperience[]).subscribe({
+  requestEditStudies(index: number) {
+    const typeStudy = this.editStudiesForm.get('editTypeStudy');
+    const school = this.editStudiesForm.get('editSchool');
+    const career = this.editStudiesForm.get('editCareer');
+    const studySemestre = this.editStudiesForm.get('editStudySemestre');
+    const startStudy = this.editStudiesForm.get('editStartStudy');
+    const endStudy = this.editStudiesForm.get('editEndStudy');
+    const studyState = this.editStudiesForm.get('editStudyState');
+    const startDate = this.Estudios[index]?.startYear;
+    const endDate = this.Estudios[index]?.endYear;
+
+    typeStudy?.setValue(this.Estudios[index]?.type ?? null);
+    school?.setValue(this.Estudios[index]?.institution ?? null);
+    career?.setValue(this.Estudios[index]?.career ?? null);
+    studySemestre?.setValue(this.Estudios[index]?.semester ?? null);
+    studyState?.setValue(this.Estudios[index]?.studyState ?? null);
+
+    if (startDate instanceof Date) {
+      const startDateString = startDate.toISOString().split('T')[0]; // Obtener YYYY-MM-DD
+      startStudy?.setValue(startDateString);
+    } else if (typeof startDate === 'string') {
+      startStudy?.setValue(startDate);
+    } else {
+      startStudy?.setValue(null);
+    }
+
+    if (endDate instanceof Date) {
+      const startDateString = endDate.toISOString().split('T')[0]; // Obtener YYYY-MM-DD
+      endStudy?.setValue(startDateString);
+    } else if (typeof startDate === 'string') {
+      endStudy?.setValue(startDate);
+    } else {
+      endStudy?.setValue(null);
+    }
+
+
+    // Marcar todos los controles como tocados
+    this.editStudiesForm.markAllAsTouched();
+    // Establecer el índice actual de la lista de estudios para editar
+    this.currentIndexStudy = index;
+  }
+  
+  editStudies(){
+    if (this.addStudiesForm.valid) {
+      const index = this.currentIndexStudy;
+      const typeStudy = document.getElementById("editTypeStudy") as HTMLInputElement;
+      const Institucion = document.getElementById("editInstitucion") as HTMLSelectElement;
+      const career = document.getElementById("editCareer") as HTMLSelectElement;
+      const studySemestre = document.getElementById("editStudySemestre") as HTMLSelectElement;
+      const startStudy = document.getElementById("editStartStudy") as HTMLSelectElement;
+      const endStudy = document.getElementById("editEndStudy") as HTMLSelectElement;
+      const studyState = document.getElementById("editStudyState") as HTMLSelectElement;
+
+      this.Estudios[index].type = typeStudy.value;
+      this.Estudios[index].institution = Institucion.value;
+      this.Estudios[index].career = career.value;
+      this.Estudios[index].semester = studySemestre.value;
+      this.Estudios[index].startYear = new Date(startStudy.value);
+      this.Estudios[index].endYear = new Date(endStudy.value);
+      this.Estudios[index].studyState = studyState.value;
+
+      const closebutton = document.getElementById('editStudiesModalClose');
+      closebutton?.click();
+      alert("Estudio Actualizado");
+    }else {
+      alert("Debes llenar todos los campos");
+    }
+  }
+
+
+  addSkill() {
+    if (this.addSkillForm.valid) {
+      const percentageValue = this.addSkillForm.value.skillPercentage;
+  
+      if (percentageValue !== null && percentageValue !== undefined) {
+        const parsedPercentage = parseInt(percentageValue, 10);
+  
+        if (!isNaN(parsedPercentage)) {
+          const newSkill: Skills = {
+            skill: this.addSkillForm.value.skillName,
+            percentage: parsedPercentage,
+            description:  this.addSkillForm.value.skillDescription,
+            state: 1
+          };
+  
+          this.Habilidades.push(newSkill);
+          this.addSkillForm.reset(); 
+          const closebutton = document.getElementById('addSkillModalClose');
+          closebutton?.click();
+          alert("Habilidad añadida");
+        }
+      }
+    }
+  }
+
+  deleteSkill(index: number){
+    const confirmacion = confirm('¿Estás seguro de que deseas eliminar habilidad?');
+     if (confirmacion) {
+         this.Habilidades[index].state = 0;
+    } 
+  }
+  requestEditSkill(index: number) {
+    const skillName = this.editSkillForm.get('editSkillName');
+    const skillPercentage = this.editSkillForm.get('editSkillPercentage');
+    const skillDescription = this.editSkillForm.get('editSkillDescription');
+  
+    skillName?.setValue(this.Habilidades[index]?.skill ?? null);
+    skillPercentage?.setValue(this.Habilidades[index]?.percentage?.toString() ?? null);
+    skillDescription?.setValue(this.Habilidades[index]?.description ?? null);
+  
+    // Marcar todos los controles como tocados
+    this.editSkillForm.markAllAsTouched();
+    // Establecer el índice actual de la lista de habilidades para editar
+    this.currentIndexSkill = index;
+  }
+  
+  editSkill() {
+    const index = this.currentIndexSkill;
+    const skillName = this.editSkillForm.get('editSkillName');
+    const skillPercentage = this.editSkillForm.get('editSkillPercentage');
+    const skillDescription = this.editSkillForm.get('editSkillDescription');
+  
+    if (skillName && skillPercentage && skillDescription) {
+      const parsedPercentage = skillPercentage.value ? parseInt(skillPercentage.value, 10) : null;
+  
+      if (parsedPercentage !== null && !isNaN(parsedPercentage)) {
+        this.Habilidades[index].skill = skillName.value || null;
+        this.Habilidades[index].percentage = parsedPercentage;
+        this.Habilidades[index].description = skillDescription.value || null;
+  
+        const closebutton = document.getElementById('editSkillModalClose');
+        closebutton?.click();
+        alert('Habilidad actualizada');
+      } else {
+        alert('Porcentaje no válido');
+      }
+    } else {
+      alert('Debes llenar todos los campos');
+    }
+  }
+  
+  
+  
+
+  updateCurriculum() {
+  const presentation = document.getElementById("cartaPresentacion") as HTMLTextAreaElement;
+    if (presentation) 
+      this.Cliente.presentation = presentation.value;
+    
+  this.createCvService.updateCurriculum(this.Cliente as User, this.Experiencias as WorkExperience[], this.Estudios as Certifications[], this.Habilidades as Skills[]).subscribe({
     next: (userData) => {
+      if (userData) {
+        console.log(userData);
+        if (userData.user)
+            this.Cliente = userData.user;
+        if (userData.workExperience)
+            this.Experiencias = userData.workExperience;
+        if (userData.certifications)
+            this.Estudios = userData.certifications;
+        if (userData.skills)
+            this.Habilidades = userData.skills;
+      }
       alert("Curriculum Actualizado");
     },
     error: (errorData) => {

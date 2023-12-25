@@ -47,20 +47,59 @@
                          <div class="col-md-8">
                             <div class="card border-dark mb-3">
                                <div class="card-header">
+                                  <h5 class="card-title w-100 font-weight-bold font-size-12">Carta de Presentacion</h5>
+                               </div>
+                               <div class="card-body">
+                                  <blockquote class="blockquote mb-0">
+                                     <textarea class="form-control" id="cartaPresentacion" rows="5" maxlength="500" placeholder="Escribe aquí tu carta de presentación (máximo 500 caracteres)" required></textarea>
+                                     <footer class="blockquote-footer">Una carta de presentación no solo revela quién eres, sino quién puedes llegar a ser en esta oportunidad única. Es tu voz, tu historia y tu oportunidad de destacar entre los demás, ¡aprovéchala para brillar!</footer>
+                                  </blockquote>
+                               </div>
+                            </div>
+                            <br>                  
+                            <div class="card border-dark mb-3">
+                               <div class="card-header">
                                   <h5 class="card-title w-100 font-weight-bold font-size-12">Datos Personales</h5>
                                </div>
                                <div class="card-body text-dark">
                                   <ng-container *ngFor="let key of getClienteKeys()">
                                      <ng-container *ngIf="shouldDisplay(key) && getKeyValue(key) !== null && getKeyValue(key) !== undefined">
                                         <div class="form-group">
-                                           <label  class="card-title" for="nombre">{{ getKeyLabel(key) }}</label>
+                                           <label class="card-title" for="nombre">{{ getKeyLabel(key) }}</label>
                                            <div class="form-group input-group">
-                                              <input type="text" class="form-control" [id]="key.toLowerCase()" [name]="key.toLowerCase()" [value]="getKeyValue(key) || ''" required readonly>
+                                              <ng-container *ngIf="getKeyLabel(key) !== 'Perfil'; else textAreaBlock">
+                                                 <input
+                                                 type="text"
+                                                 class="form-control"
+                                                 [id]="key.toLowerCase()"
+                                                 [name]="key.toLowerCase()"
+                                                 [value]="getKeyValue(key) || ''"
+                                                 required
+                                                 readonly
+                                                 />
+                                              </ng-container>
+                                              <ng-template #textAreaBlock>
+                                                 <textarea
+                                                 class="form-control"
+                                                 [id]="key.toLowerCase()"
+                                                 [name]="key.toLowerCase()"
+                                                 [value]="getKeyValue(key) || ''"
+                                                 required
+                                                 readonly
+                                                 maxlength="500"
+                                                 ></textarea>
+                                              </ng-template>
                                               <div class="input-group-append">
                                                  <button class="btn btn-outline-danger" type="button" (click)="eliminarInformacionPersonal(key)">
                                                  <i class="bi bi-trash"></i>
                                                  </button>
-                                                 <button class="btn btn-outline-primary" type="button" data-toggle="modal" data-target="#editPersonalInformation" (click)="preeditarInformacionPersonal(key)">
+                                                 <button
+                                                    class="btn btn-outline-primary"
+                                                    type="button"
+                                                    data-toggle="modal"
+                                                    data-target="#editPersonalInformation"
+                                                    (click)="preeditarInformacionPersonal(key)"
+                                                    >
                                                  <i class="bi bi-pencil"></i>
                                                  </button>
                                               </div>
@@ -87,7 +126,7 @@
                             <div class="row justify-content-center">
                                <div class="col-12">
                                   <ng-container *ngFor="let item of Experiencias; let i = index">
-                                     <div class="card border-secondary mb-3" style="max-width: 100%">
+                                     <div *ngIf="item.state == 1" class="card border-secondary mb-3" style="max-width: 100%">
                                         <div class="card-header text-center position-relative">
                                            <div class="position-absolute top-0 end-0 mt-2 me-2 text-md-end mt-3 mb-3">
                                               <button class="btn btn-outline-danger me-2" type="button" (click)="deleteWorkExperience(i)">
@@ -99,7 +138,7 @@
                                            </div>
                                            <h5 class="card-title mb-1">{{ item.company }}, {{ item.country }}</h5>
                                            <br>
-                                           <h6 class="card-subtitle mb-1">{{ item.job }} de {{ item.startDate }} hasta {{ item.endDate }}</h6>
+                                           <h6 class="card-subtitle mb-1">{{ item.job }} de {{ item.startDate | date: 'yyyy-MM-dd' }} hasta {{ item.endDate | date: 'yyyy-MM-dd' }}</h6>
                                         </div>
                                         <div class="card-body text-secondary">
                                            <h5 class="card-title">Funciones</h5>
@@ -117,44 +156,86 @@
                    </div>
                 </div>
                 <div class="row justify-content-center">
+                   <div class="col-11">
+                      <div class="card">
+                         <div class="card-header text-center">
+                            <h5 class="card-title w-100 font-weight-bold font-size-12">Estudios y Certificaciones</h5>
+                         </div>
+                         <div class="card-body">
+                            <div class="row justify-content-center">
+                               <div class="col-12">
+                                  <ng-container *ngFor="let item of Estudios; let i = index">
+                                     <div *ngIf="item.state == 1" class="card border-secondary mb-3" style="max-width: 100%">
+                                        <div class="card-header text-center position-relative">
+                                           <div class="position-absolute top-0 end-0 mt-2 me-2 text-md-end mt-3 mb-3">
+                                              <button class="btn btn-outline-danger me-2" type="button" (click)="deleteStudy(i)">
+                                              <i class="bi bi-trash"></i>
+                                              </button>
+                                              <button class="btn btn-outline-primary" type="button" data-toggle="modal" data-target="#editStudiesModal" (click)="requestEditStudies(i)">
+                                              <i class="bi bi-pencil"></i>
+                                              </button>
+                                           </div>
+                                           <h5 class="card-title mb-1">{{ item.institution }}</h5>
+                                           <br>
+                                        </div>
+                                        <div class="card-body text-secondary">
+                                           <h3 class="card-title">{{ item.type }}</h3>
+                                           <div class="d-flex justify-content-between">
+                                              <h5 class="card-text text-start">{{ item.career }}, {{ item.semester === 'Certificado' ? '' : item.semester + ' Ciclo' }}</h5>
+                                              <h6 class="card-text text-end">{{ item.startYear | date: 'yyyy-MM-dd' }} - {{ item.endYear | date: 'yyyy-MM-dd' }}</h6>
+                                           </div>
+                                           <h5 class="card-text text-start">{{ item.studyState }}</h5>
+                                        </div>
+                                     </div>
+                                  </ng-container>
+                               </div>
+                            </div>
+                            <div class="text-md-right mt-3 mb-3">
+                               <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addStudiesModal">Agregar Estudios</button>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+
+                 
+                 <div class="row justify-content-center">
                     <div class="col-11">
-                       <div class="card">
-                          <div class="card-header text-center">
-                             <h5 class="card-title w-100 font-weight-bold font-size-12">Estudios y Certificaciones</h5>
-                          </div>
-                          <div class="card-body">
-                            <div class="card border-light mb-3" style="max-width: 18rem;">
-                                <div class="card-header">Header</div>
-                                <div class="card-body">
-                                  <h5 class="card-title">Light card title</h5>
-                                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                </div>
+                      <div class="card">
+                        <div class="card-header text-center">
+                          <h5 class="card-title w-100 font-weight-bold font-size-12">Habilidades</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                          <ng-container *ngFor="let skill of Habilidades; let i = index">
+                            <li *ngIf="skill.state == 1" class="list-group-item d-flex justify-content-between align-items-center">
+                              <div>
+                                * {{ skill.skill }} {{ skill.percentage ? skill.percentage + '%' : '' }} {{ skill.description ? skill.description : '' }}
                               </div>
-                              <div class="card border-light mb-3" style="max-width: 18rem;">
-                                <div class="card-header">Header</div>
-                                <div class="card-body">
-                                  <h5 class="card-title">Light card title</h5>
-                                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                </div>
+                              <div>
+                                <button class="btn btn-outline-danger me-2" type="button" (click)="deleteSkill(i)">
+                                  <i class="bi bi-trash"></i>
+                                </button>
+                                <button class="btn btn-outline-primary" type="button" data-toggle="modal" data-target="#editSkillModal" (click)="requestEditSkill(i)">
+                                  <i class="bi bi-pencil"></i>
+                                </button>
                               </div>
-                              <div class="card border-light mb-3" style="max-width: 18rem;">
-                                <div class="card-header">Header</div>
-                                <div class="card-body">
-                                  <h5 class="card-title">Light card title</h5>
-                                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                </div>
-                              </div>
-                             <div class="text-md-right mt-3 mb-3">
-                                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addWorkExperience">Agregar Experiencia Laboral</button>
-                             </div>
-                          </div>
-                       </div>
+                            </li>
+                          </ng-container>
+                        </ul>
+                        <div class="text-md-right mt-3 mb-3">
+                          <button class="btn btn-dark" data-toggle="modal" data-target="#addSkillModal">Agregar Habilidad</button>
+                        </div>
+                      </div>
                     </div>
-                 </div>
+                  </div>
+                  
+                  
+                  
+
                 <br>
                 <div class="card-footer">
                    <input type="hidden" name="action" value="actualizar_perfil">
-                   <button type="button" class="btn btn-primary" (click)="requestAddCv()">Guardar</button>
+                   <button type="button" class="btn btn-primary" (click)="updateCurriculum()">Guardar</button>
                 </div>
                 <div class="modal fade" id="addPersonalInformation" tabindex="-1" role="dialog" aria-labelledby="addPersonalInformationLabel" aria-hidden="true">
                    <div class="modal-dialog" role="document">
@@ -181,16 +262,22 @@
                                         <option value="district">Distrito</option>
                                         <option value="city">Ciudad</option>
                                         <option value="country">Pais</option>
+                                        <option value="profile">Perfil</option>
                                      </select>
                                   </div>
                                </div>
                                <div class="row">
                                   <div class="col-md-12">
                                      <label for="valor">Valor:</label>
-                                     <input type="text" class="form-control" id="personalInformationValue" formControlName="value" placeholder="Ingresa el valor" required>
-                                     <div *ngIf="value.invalid && (value.dirty || value.touched)" class="text-danger">
-                                        <div *ngIf="value.errors?.['required']">
-                                           Necesitas rellenar este campo
+                                     <div [formGroup]="addInformationForm">
+                                        <ng-container [ngSwitch]="addInformationForm.get('gridlist')?.value">
+                                           <textarea *ngSwitchCase="'profile'" class="form-control" id="personalInformationValue" formControlName="value" placeholder="Ingresa el valor"  maxlength="500" required></textarea>
+                                           <input *ngSwitchDefault type="text" class="form-control" id="personalInformationValue" formControlName="value" placeholder="Ingresa el valor" required>
+                                        </ng-container>
+                                        <div *ngIf="addInformationForm.get('value')?.invalid && (addInformationForm.get('value')?.dirty || addInformationForm.get('value')?.touched)" class="text-danger">
+                                           <div *ngIf="addInformationForm.get('value')?.errors?.['required']">
+                                              Necesitas rellenar este campo
+                                           </div>
                                         </div>
                                      </div>
                                      <div *ngIf="(value.dirty || value.touched)" class="text-danger">
@@ -232,7 +319,10 @@
                                <div class="row">
                                   <div class="col-md-12">
                                      <label for="valor">Valor:</label>
-                                     <input type="text" class="form-control" id="edit.personalInformationValue" formControlName="editvalue" placeholder="Ingresa el valor" required>
+                                     <ng-container [ngSwitch]="editInformationForm.get('gridlist')?.value">
+                                        <textarea *ngSwitchCase="'profile'" class="form-control" id="edit.personalInformationValue" formControlName="editvalue" placeholder="Ingresa el valor"  maxlength="500" required></textarea>
+                                        <input *ngSwitchDefault type="text" class="form-control" id="edit.personalInformationValue" formControlName="editvalue" placeholder="Ingresa el valor" required>
+                                     </ng-container>
                                      <div *ngIf="(editvalue.dirty || editvalue.touched)" class="text-danger">
                                         <div *ngFor="let error of validarCampoDeEdicionInformacion()" class="text-danger">
                                            {{ error }}
@@ -418,6 +508,322 @@
                       </div>
                    </div>
                 </div>
+                <div class="modal fade" id="addStudiesModal" tabindex="-1" role="dialog" aria-labelledby="editWorkExperienceLabel" aria-hidden="true">
+                   <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                         <div class="modal-header">
+                            <h5 class="modal-title" id="editWorkExperienceLabel">Agregar Estudios o Certificaciones</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                         </div>
+                         <form [formGroup]="addStudiesForm" (ngSubmit)="addEsudies()">
+                         <div class="modal-body">
+                            <div class="container">
+                               <div class="row">
+                                  <div class="col-md-12">
+                                     <label for="gridlist">Selecciona un tipo de Estudio:</label>
+                                     <select class="form-control" id="typeStudy" formControlName="typeStudy" required>
+                                        <option value="Estudio">Estudio</option>
+                                        <option value="Certificado">Certificado</option>
+                                     </select>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-md-12">
+                                     <label for="cargo">Institucion:</label>
+                                     <input type="text" class="form-control" id="Institucion" formControlName="school" placeholder="Institucion" required>
+                                     <div *ngIf="school.invalid && (school.dirty || school.touched)" class="text-danger">
+                                        <div *ngIf="school.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-md-12">
+                                     <label for="cargo">Carrera ò Certificacion:</label>
+                                     <input type="text" class="form-control" id="career" formControlName="career" placeholder="Curso o Carrera" required>
+                                     <div *ngIf="career.invalid && (career.dirty || career.touched)" class="text-danger">
+                                        <div *ngIf="career.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-md-12">
+                                     <label for="gridlist">Semestre</label>
+                                     <select class="form-control" id="studySemestre" formControlName="studySemestre" required>
+                                        <option value="1">I</option>
+                                        <option value="2">II</option>
+                                        <option value="3">III</option>
+                                        <option value="4">IV</option>
+                                        <option value="5">V</option>
+                                        <option value="6">VI</option>
+                                        <option value="7">VII</option>
+                                        <option value="8">VIII</option>
+                                        <option value="9">IV</option>
+                                        <option value="10">V</option>
+                                        <option value="Certificado">Certificado</option>
+                                     </select>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-md-6">
+                                     <label for="fechaInicio">Fecha de Inicio:</label>
+                                     <input type="date" class="form-control" id="startStudy" formControlName="startStudy" required>
+                                     <div *ngIf="startStudy.invalid && (startStudy.dirty || startStudy.touched)" class="text-danger">
+                                        <div *ngIf="startStudy.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                     <label for="fechaFin">Fecha de Fin:</label>
+                                     <input type="date" class="form-control" id="endStudy" formControlName="endStudy">
+                                     <div *ngIf="endStudy.invalid && (endStudy.dirty || endStudy.touched)" class="text-danger">
+                                        <div *ngIf="endStudy.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                                  <div class="row">
+                                     <div class="col-md-12">
+                                        <label for="gridlist">Estado</label>
+                                        <select class="form-control" id="studyState" formControlName="studyState" required>
+                                           <option value="Trunco">Trunco</option>
+                                           <option value="En Curso">En Curso</option>
+                                           <option value="Finalizado">Finalizado</option>
+                                        </select>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                         <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id= "addStudiesModalClose">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                         </div>
+                         </form>
+                      </div>
+                   </div>
+                </div>
+                <div class="modal fade" id="editStudiesModal" tabindex="-1" role="dialog" aria-labelledby="editWorkExperienceLabel" aria-hidden="true">
+                   <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                         <div class="modal-header">
+                            <h5 class="modal-title" id="editWorkExperienceLabel">Editar Estudios o Certificaciones</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                         </div>
+                         <form [formGroup]="editStudiesForm" (ngSubmit)="editStudies()">
+                         <div class="modal-body">
+                            <div class="container">
+                               <div class="row">
+                                  <div class="col-md-12">
+                                     <label for="gridlist">Selecciona un tipo de Estudio:</label>
+                                     <select class="form-control" id="editTypeStudy" formControlName="editTypeStudy" required>
+                                        <option value="Estudio">Estudio</option>
+                                        <option value="Certificado">Certificado</option>
+                                     </select>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-md-12">
+                                     <label for="cargo">Institucion:</label>
+                                     <input type="text" class="form-control" id="editInstitucion" formControlName="editSchool" placeholder="Institucion" required>
+                                     <div *ngIf="editSchool.invalid && (editSchool.dirty || editSchool.touched)" class="text-danger">
+                                        <div *ngIf="editSchool.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-md-12">
+                                     <label for="cargo">Carrera ò Certificacion:</label>
+                                     <input type="text" class="form-control" id="editCareer" formControlName="editCareer" placeholder="Curso o Carrera" required>
+                                     <div *ngIf="editCareer.invalid && (editCareer.dirty || editCareer.touched)" class="text-danger">
+                                        <div *ngIf="editCareer.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-md-12">
+                                     <label for="gridlist">Semestre</label>
+                                     <select class="form-control" id="editStudySemestre" formControlName="editStudySemestre" required>
+                                        <option value="1">I</option>
+                                        <option value="2">II</option>
+                                        <option value="3">III</option>
+                                        <option value="4">IV</option>
+                                        <option value="5">V</option>
+                                        <option value="6">VI</option>
+                                        <option value="7">VII</option>
+                                        <option value="8">VIII</option>
+                                        <option value="9">IV</option>
+                                        <option value="10">V</option>
+                                        <option value="Certificado">Certificado</option>
+                                     </select>
+                                  </div>
+                               </div>
+                               <div class="row">
+                                  <div class="col-md-6">
+                                     <label for="fechaInicio">Fecha de Inicio:</label>
+                                     <input type="date" class="form-control" id="editStartStudy" formControlName="editStartStudy" required>
+                                     <div *ngIf="editStartStudy.invalid && (editStartStudy.dirty || editStartStudy.touched)" class="text-danger">
+                                        <div *ngIf="editStartStudy.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                     <label for="fechaFin">Fecha de Fin:</label>
+                                     <input type="date" class="form-control" id="editEndStudy" formControlName="editEndStudy">
+                                     <div *ngIf="editEndStudy.invalid && (editEndStudy.dirty || editEndStudy.touched)" class="text-danger">
+                                        <div *ngIf="editEndStudy.errors?.['required']">
+                                           Necesitas rellenar este campo
+                                        </div>
+                                     </div>
+                                  </div>
+                                  <div class="row">
+                                     <div class="col-md-12">
+                                        <label for="gridlist">Estado</label>
+                                        <select class="form-control" id="editStudyState" formControlName="editStudyState" required>
+                                           <option value="Trunco">Trunco</option>
+                                           <option value="En Curso">En Curso</option>
+                                           <option value="Finalizado">Finalizado</option>
+                                        </select>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                         <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="editStudiesModalClose">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                         </div>
+                         </form>
+                      </div>
+                   </div>
+                </div>
+
+                <div class="modal fade" id="addSkillModal" tabindex="-1" role="dialog" aria-labelledby="addSkillModallabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="addSkillModallabel">Editar Habilidades Adicionales</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <form [formGroup]="addSkillForm" (ngSubmit)="addSkill()">
+                          <div class="modal-body">
+                            <div class="container">
+                              <!-- Resto de tu contenido previo -->
+                              <!-- ... -->
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <label for="skillName">Habilidad:</label>
+                                  <input type="text" class="form-control" id="skillName" formControlName="skillName" placeholder="Ingrese la habilidad" required>
+                                  <div *ngIf="addSkillForm.get('skillName')?.invalid && (addSkillForm.get('skillName')?.dirty || addSkillForm.get('skillName')?.touched)" class="text-danger">
+                                    <div *ngIf="addSkillForm.get('skillName')?.errors?.['required']">
+                                       Necesitas rellenar este campo
+                                    </div>
+                                 </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <label for="skillPercentage">Porcentaje (0-100):</label>
+                                  <input type="number" class="form-control" id="skillPercentage" formControlName="skillPercentage" placeholder="Ingrese el porcentaje" min="0" max="100" required>
+                                  <div *ngIf="addSkillForm.get('skillPercentage')?.invalid && (addSkillForm.get('skillPercentage')?.dirty || addSkillForm.get('skillPercentage')?.touched)" class="text-danger">
+                                    <div *ngIf="addSkillForm.get('skillPercentage')?.errors?.['required']">
+                                       Necesitas rellenar este campo
+                                    </div>
+                                 </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <label for="skillDescription">Descripción:</label>
+                                  <input type="text" class="form-control" id="skillDescription" formControlName="skillDescription" placeholder="Ingrese una descripción">
+                                  <div *ngIf="addSkillForm.get('skillDescription')?.invalid && (addSkillForm.get('skillDescription')?.dirty || addSkillForm.get('skillDescription')?.touched)" class="text-danger">
+                                    <div *ngIf="addSkillForm.get('skillDescription')?.errors?.['required']">
+                                       Necesitas rellenar este campo
+                                    </div>
+                                 </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addSkillModalClose">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal fade" id="editSkillModal" tabindex="-1" role="dialog" aria-labelledby="editSkillModallabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="editSkillModallabel">Editar Habilidades Adicionales</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <form [formGroup]="editSkillForm" (ngSubmit)="editSkill()">
+                          <div class="modal-body">
+                            <div class="container">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <label for="editSkillName">Habilidad:</label>
+                                  <input type="text" class="form-control" id="editSkillName" formControlName="editSkillName" placeholder="Ingrese la habilidad" required>
+                                  <div *ngIf="editSkillForm.get('editSkillName')?.invalid && (editSkillForm.get('editSkillName')?.dirty || editSkillForm.get('editSkillName')?.touched)" class="text-danger">
+                                    <div *ngIf="editSkillForm.get('editSkillName')?.errors?.['required']">
+                                      Necesitas rellenar este campo
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <label for="editSkillPercentage">Porcentaje (0-100):</label>
+                                  <input type="number" class="form-control" id="editSkillPercentage" formControlName="editSkillPercentage" placeholder="Ingrese el porcentaje" min="0" max="100" required>
+                                  <div *ngIf="editSkillForm.get('editSkillPercentage')?.invalid && (editSkillForm.get('editSkillPercentage')?.dirty || editSkillForm.get('editSkillPercentage')?.touched)" class="text-danger">
+                                    <div *ngIf="editSkillForm.get('editSkillPercentage')?.errors?.['required']">
+                                      Necesitas rellenar este campo
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <label for="editSkillDescription">Descripción:</label>
+                                  <input type="text" class="form-control" id="editSkillDescription" formControlName="editSkillDescription" placeholder="Ingrese una descripción">
+                                  <div *ngIf="editSkillForm.get('editSkillDescription')?.invalid && (editSkillForm.get('editSkillDescription')?.dirty || editSkillForm.get('editSkillDescription')?.touched)" class="text-danger">
+                                    <div *ngIf="editSkillForm.get('editSkillDescription')?.errors?.['required']">
+                                      Necesitas rellenar este campo
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="editSkillModalClose">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  
              </div>
           </div>
        </div>

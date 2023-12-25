@@ -5,6 +5,8 @@ import { catchError, tap } from 'rxjs/operators';
 import { User } from '../Interfaces/User';
 import { Router } from '@angular/router';
 import { WorkExperience  } from '../Interfaces/WorkExperience';
+import { Certifications  } from '../Interfaces/Certifications';
+import { Skills  } from '../Interfaces/Skills';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +14,7 @@ import { WorkExperience  } from '../Interfaces/WorkExperience';
 export class CreateCvService {
   constructor(private http: HttpClient, private router: Router) {}
 
-  requestAddCv(user: User, exp: WorkExperience[]): Observable<any> {
+  updateCurriculum(user: User, exp: WorkExperience[], est: Certifications[], sk: Skills[]): Observable<any> {
     const token = localStorage.getItem('token');
   
     if (token) {
@@ -20,16 +22,16 @@ export class CreateCvService {
         Authorization: token,
       });
   
-      const data = {
+      const data = { 
         user: user,
         workExperience: exp,
+        certifications: est,
+        skills: sk,
       };
-  
-      console.log(data.workExperience[0].company);
-  
+    
       return this.http.post('http://localhost:8080/api/actualizarCv', data, {
         headers: headers,
-        responseType: 'text',
+        responseType: 'json',
       }).pipe(
         tap((response) => {
           if (response === 'Sesion Expirada') {
@@ -37,7 +39,13 @@ export class CreateCvService {
             localStorage.removeItem('token');
             throw new Error('Sesión Expirada');
           } else if (response === 'Error 403') {
-            throw new Error('No se pudo actualizar el cv');
+            // Mostrar alerta en caso de error 403
+            alert('No se pudo actualizar el CV');
+            throw new Error('No se pudo actualizar el CV');
+          } else if (response === null) {
+            // Mostrar alerta si la respuesta es nula
+            alert('La actualización del CV falló');
+            throw new Error('La actualización del CV falló');
           }
         }),
         catchError(this.handleError)
@@ -47,8 +55,9 @@ export class CreateCvService {
     }
   }
   
+  
 
-  requestDataCV(): Observable<any> {
+  getCurriculum(): Observable<any> {
     const token = localStorage.getItem('token');
   
     if (token) {

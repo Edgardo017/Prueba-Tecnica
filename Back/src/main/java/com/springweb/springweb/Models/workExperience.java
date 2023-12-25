@@ -29,7 +29,7 @@ public class workExperience {
     @Getter @Setter
     private Date endDate;
 
-    @Getter @Setter
+    @Getter @Setter @Column(length = 5000)
     private String functions;
 
     @Getter @Setter

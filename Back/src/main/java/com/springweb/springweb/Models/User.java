@@ -35,6 +35,11 @@ public class User {
     private String city;
     @Getter @Setter
     private String country;
+    @Getter @Setter @Column(length = 500)
+    private String profile;
+    @Getter @Setter @Column(length = 500)
+    private String presentation;
+
     @Getter @Setter @Column(columnDefinition = "LONGTEXT")
     private String profileImage;
     @Getter @Setter @Column(columnDefinition = "LONGTEXT")

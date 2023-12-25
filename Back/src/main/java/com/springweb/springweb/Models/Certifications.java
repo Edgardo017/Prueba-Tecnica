@@ -14,7 +14,7 @@ public class Certifications {
     @Getter @Setter
     private String type;
     @Getter @Setter
-    private String Institution;
+    private String institution;
 
     @Getter @Setter
     private String career;
@@ -29,7 +29,8 @@ public class Certifications {
     @Temporal(TemporalType.DATE)
     @Getter @Setter
     private Date endYear;
-
+    @Getter @Setter
+    private String studyState;
     @Getter @Setter
     private int state;
 

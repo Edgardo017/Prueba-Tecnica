@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
           alert("Sesion Iniciada");
 
           this.loginForm.reset();
-          this.router.navigate(['/crearCv']);
+          this.router.navigate(['/crearcurriculum']);
           return;
         },
         error: (errorData) => {
