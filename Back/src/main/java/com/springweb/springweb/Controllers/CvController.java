@@ -41,7 +41,7 @@ public class CvController {
         List<Certifications> certifications = CvDao.getCertificationsByUserId(Long.parseLong(tokenUserId));
         List<Skills> skills = CvDao.getSkillsByUserId(Long.parseLong(tokenUserId));
 
-        newUser.setPassword(null);
+
         Curriculum curriculum = new Curriculum();
         curriculum.setUser(newUser);
         curriculum.setWorkExperience(experiences);
@@ -87,7 +87,6 @@ public class CvController {
 
         Curriculum cv = CvDao.updateUser(token, Curriculum);
         if (cv != null){
-            cv.getUser().setPassword(null);
             return ResponseEntity.ok(cv);
         }
         return null;
